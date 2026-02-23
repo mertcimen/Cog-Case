@@ -190,6 +190,7 @@ namespace BaseSystems.Scripts.Managers
 			OnLevelWinWithMoveCount?.Invoke(moveCount);
 		}
 
+		[Button]
 		public void Lose(string loseText)
 		{
 			if (StateManager.Instance.CurrentState != GameState.OnStart) return;
