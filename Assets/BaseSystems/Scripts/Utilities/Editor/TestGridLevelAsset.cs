@@ -10,12 +10,12 @@ namespace BaseSystems.Scripts.Utilities.Editor
 	/// For quickly testing specific levels in editor
 	/// </summary>
 	[InitializeOnLoad]
-	public static class TestLevelEditor
+	public static class TestGridLevelAsset
 	{
 		private static string[] dropdown;
 		private static int framesToWaitUntilPlayMode;
 
-		static TestLevelEditor()
+		static TestGridLevelAsset()
 		{
 			EditorApplication.playModeStateChanged += ModeChanged;
 		}
