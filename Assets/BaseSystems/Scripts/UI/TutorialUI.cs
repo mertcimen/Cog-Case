@@ -1,18 +1,16 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+using _Main.Scripts.Utilities;
+using BaseSystems.Scripts.Utilities;
 using DG.Tweening;
 using Fiber.Utilities;
+using TMPro;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.Video;
-using _Main.Scripts.Utilities;
-using BaseSystems.Scripts.Utilities;
 
-namespace Fiber.UI
+namespace BaseSystems.Scripts.UI
 {
 	public class TutorialUI : Singleton<TutorialUI>
 	{

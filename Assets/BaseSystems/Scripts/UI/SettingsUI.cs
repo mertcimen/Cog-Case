@@ -5,7 +5,7 @@ using Lofelt.NiceVibrations;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Fiber.UI
+namespace BaseSystems.Scripts.UI
 {
 	public class SettingsUI : PanelUI
 	{

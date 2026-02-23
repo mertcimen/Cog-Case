@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace Fiber.CurrencySystem
+namespace BaseSystems.CurrencySystem.Scripts
 {
 	public abstract class Currency
 	{

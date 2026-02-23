@@ -1,15 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using _Main.Scripts.Datas;
-using _Main.Scripts.Manager;
+using BaseSystems.CurrencySystem.Scripts;
 using BaseSystems.Scripts.Managers;
 using DG.Tweening;
-using Fiber.CurrencySystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Fiber.UI
+namespace BaseSystems.Scripts.UI
 {
 	public class WinPanel : PanelUI
 	{

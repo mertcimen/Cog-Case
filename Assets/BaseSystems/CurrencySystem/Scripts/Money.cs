@@ -1,8 +1,7 @@
 using BaseSystems.Scripts.Utilities;
-using Fiber.Utilities;
 using UnityEngine;
 
-namespace Fiber.CurrencySystem
+namespace BaseSystems.CurrencySystem.Scripts
 {
 	/// <summary>
 	/// Soft currency

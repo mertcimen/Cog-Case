@@ -1,7 +1,6 @@
 using Sirenix.OdinInspector;
-using UnityEngine;
 
-namespace Fiber.UI
+namespace BaseSystems.Scripts.UI
 {
 	public abstract class PanelUI : SerializedMonoBehaviour
 	{

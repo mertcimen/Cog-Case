@@ -1,10 +1,9 @@
 using BaseSystems.Scripts.Utilities;
 using DG.Tweening;
-using Fiber.Utilities;
 using TMPro;
 using UnityEngine;
 
-namespace Fiber.UI
+namespace BaseSystems.Scripts.UI
 {
 	public class FloatingText : MonoBehaviour
 	{

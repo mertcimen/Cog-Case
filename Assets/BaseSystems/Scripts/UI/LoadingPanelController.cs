@@ -1,10 +1,10 @@
 using DG.Tweening;
 using Fiber.Utilities;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
-namespace Fiber.UI
+namespace BaseSystems.Scripts.UI
 {
 	public class LoadingPanelController : SingletonPersistent<LoadingPanelController>
 	{

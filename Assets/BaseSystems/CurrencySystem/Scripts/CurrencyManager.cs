@@ -1,4 +1,4 @@
-namespace Fiber.CurrencySystem
+namespace BaseSystems.CurrencySystem.Scripts
 {
 	public static class CurrencyManager
 	{

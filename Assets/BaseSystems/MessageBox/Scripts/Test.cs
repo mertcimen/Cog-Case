@@ -1,8 +1,7 @@
-using Fiber.MessageSystem;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Fiber.MessageSystem
+namespace BaseSystems.MessageBox.Scripts
 {
 	public class Test : MonoBehaviour
 	{

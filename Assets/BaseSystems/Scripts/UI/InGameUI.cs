@@ -1,13 +1,12 @@
 using _Main.Scripts.GamePlay;
 using BaseSystems.Scripts.Managers;
-using Fiber.MessageSystem;
 using Lofelt.NiceVibrations;
 using TMPro;
 using TriInspector;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Fiber.UI
+namespace BaseSystems.Scripts.UI
 {
 	public class InGameUI : MonoBehaviour
 	{
@@ -60,7 +59,7 @@ namespace Fiber.UI
 			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.MediumImpact);
 			if (askBeforeRestart)
 			{
-				MessageBox.Instance.Show("Are you sure you want to restart?", "Restart", MessageBox.MessageBoxButtons.YesNo, MessageBox.MessageBoxType.Question, LevelManager.Instance.RestartLevel);
+				MessageBox.Scripts.MessageBox.Instance.Show("Are you sure you want to restart?", "Restart", MessageBox.Scripts.MessageBox.MessageBoxButtons.YesNo, MessageBox.Scripts.MessageBox.MessageBoxType.Question, LevelManager.Instance.RestartLevel);
 			}
 			else
 			{

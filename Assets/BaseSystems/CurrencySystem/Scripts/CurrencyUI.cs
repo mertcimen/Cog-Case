@@ -1,14 +1,13 @@
 using BaseSystems.Scripts.Managers;
+using BaseSystems.Scripts.UI;
 using BaseSystems.Scripts.Utilities;
-using Fiber.UI;
-using Fiber.Utilities;
-using Lofelt.NiceVibrations;
 using DG.Tweening;
 using Fiber.AudioSystem;
-using UnityEngine;
+using Lofelt.NiceVibrations;
 using TMPro;
+using UnityEngine;
 
-namespace Fiber.CurrencySystem
+namespace BaseSystems.CurrencySystem.Scripts
 {
 	public abstract class CurrencyUI : MonoBehaviour
 	{

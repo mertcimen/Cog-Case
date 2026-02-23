@@ -1,4 +1,4 @@
-namespace Fiber.CurrencySystem
+namespace BaseSystems.CurrencySystem.Scripts
 {
 	public class MoneyUI : CurrencyUI
 	{

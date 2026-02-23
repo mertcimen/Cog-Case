@@ -1,11 +1,11 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-namespace Fiber.UI
+namespace BaseSystems.Scripts.UI
 {
 	[AddComponentMenu("UI/SliderToggle", 31)]
 	[RequireComponent(typeof(RectTransform))]

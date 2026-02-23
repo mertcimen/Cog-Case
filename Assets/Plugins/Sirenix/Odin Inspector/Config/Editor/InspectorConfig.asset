@@ -51,3 +51,5 @@ MonoBehaviour:
       EditorTypeName: 
     - DrawnTypeName: _Main.Scripts.LevelConfig.LevelConfigManager, Assembly-CSharp
       EditorTypeName: 
+    - DrawnTypeName: BaseSystems.Scripts.Managers.LevelManager, Assembly-CSharp
+      EditorTypeName: 

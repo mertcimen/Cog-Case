@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Fiber.MessageSystem
+namespace BaseSystems.MessageBox.Scripts
 {
 	/// <summary>
 	/// Displays a message window, also known as a dialog box, which presents a message to the player.
