@@ -56,7 +56,6 @@ namespace _Main.Scripts.LevelEditor
 			{
 				if (old.TryGetValue(c, out var existing))
 				{
-					// coord'u yine set et (güvenlik)
 					existing.coord = c;
 					newCells.Add(existing);
 				}
@@ -145,7 +144,7 @@ namespace _Main.Scripts.LevelEditor
 
 			cell.isWall = isWall;
 
-			// Duvarsa top bulunamaz
+		
 			if (isWall)
 				cell.hasBall = false;
 
@@ -161,7 +160,7 @@ namespace _Main.Scripts.LevelEditor
 		{
 			if (!TryGetCell(c, out var cell)) return;
 
-			// Duvar üstüne top koyma
+			
 			if (cell.isWall)
 			{
 				cell.hasBall = false;
@@ -188,7 +187,7 @@ namespace _Main.Scripts.LevelEditor
 			SetCell(cell);
 		}
 
-		// Simülasyon için: coord -> index dönüşümü (storage değil, sadece hesap)
+		// For Level simulation : coord -> index trans. (only for calculate)
 		public int CoordToIndex(Vector2Int c)
 		{
 			return c.y * gridSize.x + c.x;

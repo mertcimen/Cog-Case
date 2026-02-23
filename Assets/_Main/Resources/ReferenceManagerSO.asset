@@ -12,3 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3cffcd1195ee4a978be24af40553d7a, type: 3}
   m_Name: ReferenceManagerSO
   m_EditorClassIdentifier: 
+  ballPrefab: {fileID: 1976062909858143509, guid: 879c039820907468cb42aac209e1a352, type: 3}
+  wallPrefab: {fileID: 535316689993692520, guid: 100e3dcb494c842e1a5afb676927294a, type: 3}

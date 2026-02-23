@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using _Main.Scripts.BallSystem;
 using _Main.Scripts.LevelEditor;
 using BaseSystems.Scripts.LevelSystem;
+using BaseSystems.Scripts.Managers;
 using UnityEngine;
 
 namespace _Main.Scripts.GridSystem
@@ -8,7 +10,7 @@ namespace _Main.Scripts.GridSystem
 	public class GridManager : MonoBehaviour
 	{
 		[SerializeField] private GridCell cellPrefab;
-
+		[SerializeField] private BallController ballPrefab;
 		[Header("Layout")]
 		[SerializeField] private float cellSize = 1f; // hücre merkezleri arası temel mesafe
 		[SerializeField] private float cellGap = 0f; // ekstra boşluk
@@ -17,6 +19,9 @@ namespace _Main.Scripts.GridSystem
 		private Transform gridRoot;
 
 		private readonly Dictionary<Vector2Int, GridCell> cellsByCoord = new Dictionary<Vector2Int, GridCell>();
+
+		private int paintableGridCount = 0;
+		private int paintedGridCount = 0;
 
 		public void Initialize(Level level, GridLevelAsset levelData)
 		{
@@ -35,7 +40,7 @@ namespace _Main.Scripts.GridSystem
 			ClearSpawned();
 
 			float spacing = cellSize + cellGap;
-			
+
 			float xCenterOffset = (gridData.gridSize.x - 1) * 0.5f;
 			float yCenterOffset = (gridData.gridSize.y - 1) * 0.5f;
 
@@ -60,9 +65,27 @@ namespace _Main.Scripts.GridSystem
 				// GridCell’in içinde coordinate/wall gibi init fonksiyonların varsa burada setle:
 				// spawned.Initialize(cell.coord, cell.isWall, cell.hasBall);
 				spawned.Initialize(cell); // <-- cell, CellData struct’ı
-				
+				if (!cell.isWall)
+				{
+					IncreaseRequiredPaintCount();
+				}
 
 				cellsByCoord[cell.coord] = spawned;
+			}
+		}
+
+		private void IncreaseRequiredPaintCount()
+		{
+			paintableGridCount++;
+		}
+
+		public void IncreaseCurrentPaintedCount()
+		{
+			paintedGridCount++;
+
+			if (paintedGridCount == paintableGridCount)
+			{
+				LevelManager.Instance.Win();
 			}
 		}
 
