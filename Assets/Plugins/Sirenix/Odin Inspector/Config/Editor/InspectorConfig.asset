@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1137305049, guid: a4865f1ab4504ed8a368670db22f409c, type: 3}
+  m_Name: InspectorConfig
+  m_EditorClassIdentifier: 
+  enableOdinInInspector: 1
+  defaultEditorBehaviour: 11
+  processMouseMoveInInspector: 1
+  drawingConfig:
+    configs:
+    - DrawnTypeName: Fiber.Build.ProjectConfig.ProjectConfig, Assembly-CSharp-Editor
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.Managers.LevelManager, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.Managers.GameManager, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: _Main.Scripts.GamePlay.TimeManager, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.AudioSystem.AudioManager, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.Managers.HapticManager, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: _Main.Scripts.Analytics.AnalyticsManager, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.Managers.UIManager, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.UI.FloatingText, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.UI.InGameUI, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.UI.LoadingPanelController, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.UI.LosePanel, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.UI.SettingsUI, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.UI.StartPanel, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.UI.TutorialUI, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: Fiber.UI.WinPanel, Assembly-CSharp
+      EditorTypeName: 
+    - DrawnTypeName: _Main.Scripts.LevelConfig.LevelConfigManager, Assembly-CSharp
+      EditorTypeName: 
