@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using _Main.Scripts.Datas;
 using UnityEditor;
 using UnityEngine;
 
@@ -160,6 +161,7 @@ namespace _Main.Scripts.LevelEditor
 			EditorGUILayout.BeginVertical("box");
 			EditorGUILayout.LabelField("Level", EditorStyles.boldLabel);
 
+			// Level Time
 			EditorGUI.BeginChangeCheck();
 			int newTime = EditorGUILayout.IntField("Level Time", asset.levelTime);
 			if (EditorGUI.EndChangeCheck())
@@ -168,6 +170,19 @@ namespace _Main.Scripts.LevelEditor
 				asset.levelTime = Mathf.Max(0, newTime);
 				MarkDirty();
 				_hasWinAnalysis = false;
+				Repaint();
+			}
+
+			// Paint Color (ALWAYS visible)
+			EditorGUI.BeginChangeCheck();
+			var newPaintColorType = (ColorType)EditorGUILayout.EnumPopup("Paint Color", asset.levelPaintColor);
+			if (EditorGUI.EndChangeCheck())
+			{
+				Undo.RecordObject(asset, "Edit Paint Color");
+				asset.levelPaintColor = newPaintColorType;
+				MarkDirty();
+				_hasWinAnalysis = false;
+				Repaint();
 			}
 
 			EditorGUILayout.EndVertical();

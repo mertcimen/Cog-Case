@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Main.Scripts.Datas;
 using UnityEngine;
 
 namespace _Main.Scripts.LevelEditor
@@ -8,6 +9,7 @@ namespace _Main.Scripts.LevelEditor
 	public class GridLevelAsset : ScriptableObject
 	{
 		public int levelTime = 60;
+		public ColorType levelPaintColor;
 		public GridData grid = new GridData();
 	}
 

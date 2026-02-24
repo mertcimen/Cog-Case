@@ -28,10 +28,12 @@ namespace _Main.Scripts.GridSystem
 
 		private bool isPainted;
 
+		private Color targetColor;
+
 		public void Initialize(CellData cellData, GridManager owner)
 		{
 			gridManager = owner;
-
+			targetColor = gridManager.TargetColor;
 			Coordinate = cellData.coord;
 			IsWall = cellData.isWall;
 
@@ -53,7 +55,7 @@ namespace _Main.Scripts.GridSystem
 			if (cellData.hasBall)
 				SpawnBall();
 
-			if (cellData.hasCoin && currentBall == null) 
+			if (cellData.hasCoin && currentBall == null)
 				SpawnCoin();
 		}
 
@@ -90,7 +92,7 @@ namespace _Main.Scripts.GridSystem
 			if (paintSprite != null)
 			{
 				paintSprite.enabled = true;
-				paintSprite.DOColor(Color.red, 0.4f);
+				paintSprite.DOColor(targetColor, 0.4f);
 			}
 
 			gridManager?.IncreaseCurrentPaintedCount();

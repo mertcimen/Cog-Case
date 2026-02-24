@@ -13,22 +13,23 @@ MonoBehaviour:
   m_Name: GameParameters
   m_EditorClassIdentifier: 
   ballMoveDuration: 0.2
+  rotatePerStep: 90
   fillColors:
   - colorType: 0
-    ballColor: {r: 0.8490566, g: 0.052064814, b: 0.052064814, a: 1}
+    color: {r: 1, g: 0.023584902, b: 0.023584902, a: 1}
   - colorType: 1
-    ballColor: {r: 0.7924528, g: 0.39077023, b: 0.063545756, a: 1}
+    color: {r: 0.8018868, g: 0.43543446, b: 0, a: 1}
   - colorType: 2
-    ballColor: {r: 0.8475805, g: 0.8962264, b: 0.04650232, a: 1}
+    color: {r: 1, g: 0.92600703, b: 0.2028302, a: 1}
   - colorType: 3
-    ballColor: {r: 0.18180777, g: 0.7830189, b: 0, a: 1}
+    color: {r: 0.2107028, g: 0.8867924, b: 0, a: 1}
   - colorType: 4
-    ballColor: {r: 0, g: 0.16215587, b: 1, a: 1}
+    color: {r: 0, g: 0.0940752, b: 1, a: 1}
   - colorType: 5
-    ballColor: {r: 0.28314158, g: 0.034131378, b: 0.5566038, a: 1}
+    color: {r: 0.31705865, g: 0, b: 0.7924528, a: 1}
   - colorType: 6
-    ballColor: {r: 0.8745206, g: 0.10902455, b: 0.9245283, a: 1}
+    color: {r: 0.7733466, g: 0.038848326, b: 0.9150943, a: 1}
   - colorType: 7
-    ballColor: {r: 1, g: 1, b: 1, a: 1}
+    color: {r: 1, g: 1, b: 1, a: 1}
   - colorType: 8
-    ballColor: {r: 0, g: 0, b: 0, a: 1}
+    color: {r: 0, g: 0, b: 0, a: 1}

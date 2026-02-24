@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using _Main.Scripts.BallSystem;
+using _Main.Scripts.Datas;
 using _Main.Scripts.InputSystem;
 using _Main.Scripts.LevelEditor;
 using _Main.Scripts.Pooling;
@@ -19,6 +21,9 @@ namespace _Main.Scripts.GridSystem
 		private Level currentLevel;
 		private Transform gridRoot;
 
+		private ColorType levelTargetColorForPaint;
+		private Color targetColor;
+		public Color TargetColor => targetColor;
 		private readonly Dictionary<Vector2Int, GridCell> cellsByCoord = new Dictionary<Vector2Int, GridCell>();
 
 		private readonly List<BallController> activeBalls = new List<BallController>(32);
@@ -52,6 +57,12 @@ namespace _Main.Scripts.GridSystem
 				Debug.LogError("GridManager.Initialize failed: levelData/grid is null");
 				return;
 			}
+
+			levelTargetColorForPaint = levelData.levelPaintColor;
+			var matchedColor = ReferenceManagerSO.Instance.GameParameters.fillColors.FirstOrDefault(x =>
+				x.colorType == levelData.levelPaintColor);
+
+			targetColor = matchedColor != null ? matchedColor.color : Color.red;
 
 			var gridData = levelData.grid;
 			gridData.EnsureGridStorage();
@@ -187,7 +198,6 @@ namespace _Main.Scripts.GridSystem
 				var toCell = cellsByCoord[cmd.to];
 
 				cmd.movement.MoveAlongPath(cmd.path, CoordToCell, fromCell, toCell, dir, () => pending--);
-
 			}
 
 			while (pending > 0)

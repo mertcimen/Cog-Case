@@ -20,7 +20,7 @@ namespace _Main.Scripts.Datas
 	public class FillColors
 	{
 		public ColorType colorType;
-		public Color ballColor;
+		public Color color;
 	}
 
 	public enum ColorType

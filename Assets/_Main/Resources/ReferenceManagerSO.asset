@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballPrefab: {fileID: 1976062909858143509, guid: 879c039820907468cb42aac209e1a352, type: 3}
   wallPrefab: {fileID: 535316689993692520, guid: 100e3dcb494c842e1a5afb676927294a, type: 3}
+  gameParameters: {fileID: 11400000, guid: 719bc7898a4d44a838c38b06b96eedd8, type: 2}

@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Level Test
   m_EditorClassIdentifier: 
   levelTime: 60
+  levelPaintColor: 2
   grid:
     gridSize: {x: 5, y: 14}
     cells:
