@@ -1,6 +1,7 @@
 using _Main.Scripts.BallSystem;
 using _Main.Scripts.Datas;
 using _Main.Scripts.LevelEditor;
+using DG.Tweening;
 using UnityEngine;
 
 namespace _Main.Scripts.GridSystem
@@ -10,34 +11,34 @@ namespace _Main.Scripts.GridSystem
 		public Vector2Int Coordinate { get; private set; }
 		public bool IsWall { get; private set; }
 		public bool HasBall { get; private set; }
-
 		public BallController CurrentBall => currentBall;
 
 		[SerializeField] private SpriteRenderer paintSprite;
 
 		private BallController currentBall;
+		private GridManager gridManager;
 
-		public void Initialize(CellData cellData)
+		private bool isPainted;
+
+		public void Initialize(CellData cellData, GridManager owner)
 		{
+			gridManager = owner;
+
 			Coordinate = cellData.coord;
 			IsWall = cellData.isWall;
 			HasBall = cellData.hasBall;
-			
+
 			if (IsWall && HasBall)
 				HasBall = false;
 
+			isPainted = false;
+
 			SpawnContent();
-			ApplyVisuals();
 		}
 
 		private void SpawnContent()
 		{
-			// // Önce varsa eskileri temizle (re-init senaryosunda önemli)
-			// for (int i = transform.childCount - 1; i >= 0; i--)
-			// 	Destroy(transform.GetChild(i).gameObject);
-
 			currentBall = null;
-
 			if (HasBall)
 			{
 				var ballPrefab = ReferenceManagerSO.Instance.BallPrefab;
@@ -46,8 +47,6 @@ namespace _Main.Scripts.GridSystem
 				ball.transform.localRotation = Quaternion.identity;
 
 				currentBall = ball;
-
-				// Ball’a currentCell verelim
 				currentBall.Initialize(this);
 			}
 			else if (IsWall)
@@ -59,15 +58,32 @@ namespace _Main.Scripts.GridSystem
 			}
 		}
 
-		private void ApplyVisuals()
+		public void Paint()
 		{
-			
+			if (IsWall) return;
+			if (isPainted) return;
+
+			isPainted = true;
+
+			if (paintSprite != null)
+			{
+				paintSprite.enabled = true;
+				paintSprite.DOColor(Color.red, 0.4f);
+			}
+
+			gridManager?.IncreaseCurrentPaintedCount();
 		}
 
-		public void SetPainted(bool painted)
+		public void ClearBallReference()
 		{
-			if (paintSprite != null)
-				paintSprite.enabled = painted;
+			currentBall = null;
+			HasBall = false;
+		}
+
+		public void SetBallReference(BallController ball)
+		{
+			currentBall = ball;
+			HasBall = ball != null;
 		}
 	}
 }
