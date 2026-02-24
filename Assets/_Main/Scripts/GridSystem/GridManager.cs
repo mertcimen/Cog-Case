@@ -186,7 +186,8 @@ namespace _Main.Scripts.GridSystem
 				var fromCell = cellsByCoord[cmd.from];
 				var toCell = cellsByCoord[cmd.to];
 
-				cmd.movement.MoveAlongPath(cmd.path, CoordToCell, fromCell, toCell, () => pending--);
+				cmd.movement.MoveAlongPath(cmd.path, CoordToCell, fromCell, toCell, dir, () => pending--);
+
 			}
 
 			while (pending > 0)

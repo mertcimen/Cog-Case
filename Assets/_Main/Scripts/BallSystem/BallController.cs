@@ -8,12 +8,18 @@ namespace _Main.Scripts.BallSystem
 		public GridCell CurrentCell { get; private set; }
 
 		[SerializeField] private BallMovementController movementController;
+		[SerializeField] private BallRotateController ballRotateController;
+
 		public BallMovementController MovementController => movementController;
+		public BallRotateController BallRotateController => ballRotateController;
 
 		public void Initialize(GridCell cell)
 		{
 			if (movementController == null)
 				movementController = GetComponent<BallMovementController>();
+
+			if (ballRotateController == null)
+				ballRotateController = GetComponent<BallRotateController>();
 
 			SetCurrentCell(cell);
 
@@ -24,17 +30,17 @@ namespace _Main.Scripts.BallSystem
 			}
 
 			movementController.Initialize(this);
+
+			// NEW
+			if (ballRotateController != null)
+				ballRotateController.Initialize(this);
 		}
 
-		public void SetCurrentCell(GridCell cell)
-		{
-			CurrentCell = cell;
-		}
+		public void SetCurrentCell(GridCell cell) => CurrentCell = cell;
 
 		public void DetachFromCell()
 		{
 			if (CurrentCell == null) return;
-
 			CurrentCell.ClearBallReference();
 			CurrentCell = null;
 		}
@@ -45,8 +51,6 @@ namespace _Main.Scripts.BallSystem
 
 			targetCell.SetBallReference(this);
 			CurrentCell = targetCell;
-
-			// güvenlik: tam hücre merkezine snap
 			transform.position = targetCell.transform.position;
 		}
 	}

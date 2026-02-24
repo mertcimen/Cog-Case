@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using _Main.Scripts.GridSystem;
 using BaseSystems.AudioSystem.Scripts;
+using _Main.Scripts.InputSystem;
 using UnityEngine;
 
 namespace _Main.Scripts.BallSystem
@@ -12,8 +13,7 @@ namespace _Main.Scripts.BallSystem
 		private BallController ballController;
 
 		[Header("Movement")]
-		[SerializeField] private float moveDuration = 0.35f; // independent of path length
-		
+		[SerializeField] private float moveDuration = 0.35f;
 
 		private bool isMoving;
 		public bool IsMoving => isMoving;
@@ -23,8 +23,14 @@ namespace _Main.Scripts.BallSystem
 			ballController = controller;
 		}
 
-		public void MoveAlongPath(List<Vector2Int> path, Func<Vector2Int, GridCell> coordToCell, GridCell fromCell,
-			GridCell toCell, Action onComplete)
+		// NEW: swipeDirection param
+		public void MoveAlongPath(
+			List<Vector2Int> path,
+			Func<Vector2Int, GridCell> coordToCell,
+			GridCell fromCell,
+			GridCell toCell,
+			SwipeDirection swipeDirection,
+			Action onComplete)
 		{
 			if (isMoving) return;
 
@@ -48,15 +54,20 @@ namespace _Main.Scripts.BallSystem
 				return;
 			}
 
-			StartCoroutine(MoveRoutine(path, coordToCell, fromCell, toCell, onComplete));
+			StartCoroutine(MoveRoutine(path, coordToCell, toCell, swipeDirection, onComplete));
 		}
 
-		private IEnumerator MoveRoutine(List<Vector2Int> path, Func<Vector2Int, GridCell> coordToCell,
-			GridCell fromCell, GridCell toCell, Action onComplete)
+		private IEnumerator MoveRoutine(
+			List<Vector2Int> path,
+			Func<Vector2Int, GridCell> coordToCell,
+			GridCell toCell,
+			SwipeDirection swipeDirection,
+			Action onComplete)
 		{
 			isMoving = true;
 
 			
+
 			ballController.DetachFromCell();
 
 			// Start cell paint + snap
@@ -69,38 +80,38 @@ namespace _Main.Scripts.BallSystem
 			}
 
 			int steps = path.Count - 1;
-			if (steps <= 0)
+
+			if (ballController != null && ballController.BallRotateController != null && steps > 0)
 			{
-				Finish(toCell, onComplete);
-				yield break;
+				ballController.BallRotateController.StartRotate(swipeDirection, moveDuration, steps);
 			}
 
-			//  moveDuration per gridCell
-			float stepDuration = moveDuration / steps;
-
 			
-			for (int i = 1; i < path.Count; i++)
+			if (steps > 0)
 			{
-				GridCell cell = coordToCell(path[i]);
-				if (cell == null)
-					continue;
+				float stepDuration = moveDuration / steps;
 
-				// Arrived To cell
-				cell.Paint();
-				cell.TryCollectCoin(transform.position);
-
-				Vector3 start = transform.position;
-				Vector3 end = cell.transform.position;
-
-				float t = 0f;
-				while (t < 1f)
+				for (int i = 1; i < path.Count; i++)
 				{
-					t += Time.deltaTime / Mathf.Max(0.0001f, stepDuration);
-					transform.position = Vector3.Lerp(start, end, t);
-					yield return null;
-				}
+					GridCell cell = coordToCell(path[i]);
+					if (cell == null) continue;
 
-				transform.position = end;
+					cell.Paint();
+					cell.TryCollectCoin(transform.position);
+
+					Vector3 start = transform.position;
+					Vector3 end = cell.transform.position;
+
+					float t = 0f;
+					while (t < 1f)
+					{
+						t += Time.deltaTime / Mathf.Max(0.0001f, stepDuration);
+						transform.position = Vector3.Lerp(start, end, t);
+						yield return null;
+					}
+
+					transform.position = end;
+				}
 			}
 
 			Finish(toCell, onComplete);
@@ -110,7 +121,10 @@ namespace _Main.Scripts.BallSystem
 		{
 			AudioManager.Instance.PlayAudio(AudioName.BallHit);
 
-			//Move Seq. finished
+			// Stop rotate
+			if (ballController != null && ballController.BallRotateController != null)
+				ballController.BallRotateController.StopRotate();
+
 			ballController.AttachToCell(toCell);
 
 			isMoving = false;

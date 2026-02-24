@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4791258753693728833}
   - component: {fileID: 1976062909858143509}
   - component: {fileID: 7807363994890975302}
+  - component: {fileID: 2828079127077992351}
   m_Layer: 0
   m_Name: Ball
   m_TagString: Untagged
@@ -47,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementController: {fileID: 7807363994890975302}
+  ballRotateController: {fileID: 0}
 --- !u!114 &7807363994890975302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,8 +62,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveDuration: 0.2
-  minStepDuration: 0.02
-  maxStepDuration: 0.12
+--- !u!114 &2828079127077992351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445920785367638980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97d78e0ec6d6450eb559e818178674e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballModel: {fileID: 39655083488398348}
+  angularSpeed: 720
 --- !u!1 &2195651584828713405
 GameObject:
   m_ObjectHideFlags: 0
@@ -155,7 +169,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9da028b30f83f45cabb69377072ce4bb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
