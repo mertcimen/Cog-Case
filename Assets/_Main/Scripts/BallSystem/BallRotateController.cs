@@ -1,3 +1,4 @@
+using _Main.Scripts.Datas;
 using _Main.Scripts.InputSystem;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace _Main.Scripts.BallSystem
 		[SerializeField] private Transform ballModel;
 
 		private BallController ballController;
-
+		private float rotatePerStep;
 		private bool isRotating;
 		private Vector3 worldAxis;
 		private float remainingAngle;     
@@ -17,6 +18,7 @@ namespace _Main.Scripts.BallSystem
 		public void Initialize(BallController ballController)
 		{
 			this.ballController = ballController;
+			rotatePerStep = ReferenceManagerSO.Instance.GameParameters.GetRotatePerStep();
 		}
 
 		private void Update()
@@ -63,7 +65,7 @@ namespace _Main.Scripts.BallSystem
 			}
 
 			//  90 degree per step
-			float totalAngle = steps * 90f;
+			float totalAngle = steps * rotatePerStep;
 
 			remainingAngle = totalAngle;
 

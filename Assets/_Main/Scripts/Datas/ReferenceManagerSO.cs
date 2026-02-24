@@ -11,10 +11,10 @@ namespace _Main.Scripts.Datas
 
 		[SerializeField] private BallController ballPrefab;
 		[SerializeField] private WallController wallPrefab;
-
+		[SerializeField] private GameParametersSO gameParameters;
 		public BallController BallPrefab => ballPrefab;
 		public WallController WallPrefab => wallPrefab;
-
+		public GameParametersSO GameParameters => gameParameters;
 		public static ReferenceManagerSO Instance
 		{
 			get

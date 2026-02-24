@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Main.Scripts.Datas;
 using _Main.Scripts.GridSystem;
 using BaseSystems.AudioSystem.Scripts;
 using _Main.Scripts.InputSystem;
@@ -21,16 +22,12 @@ namespace _Main.Scripts.BallSystem
 		public void Initialize(BallController controller)
 		{
 			ballController = controller;
+			moveDuration = ReferenceManagerSO.Instance.GameParameters.GetBallMoveDuration();
+			
 		}
 
-		// NEW: swipeDirection param
-		public void MoveAlongPath(
-			List<Vector2Int> path,
-			Func<Vector2Int, GridCell> coordToCell,
-			GridCell fromCell,
-			GridCell toCell,
-			SwipeDirection swipeDirection,
-			Action onComplete)
+		public void MoveAlongPath(List<Vector2Int> path, Func<Vector2Int, GridCell> coordToCell, GridCell fromCell,
+			GridCell toCell, SwipeDirection swipeDirection, Action onComplete)
 		{
 			if (isMoving) return;
 
@@ -57,16 +54,10 @@ namespace _Main.Scripts.BallSystem
 			StartCoroutine(MoveRoutine(path, coordToCell, toCell, swipeDirection, onComplete));
 		}
 
-		private IEnumerator MoveRoutine(
-			List<Vector2Int> path,
-			Func<Vector2Int, GridCell> coordToCell,
-			GridCell toCell,
-			SwipeDirection swipeDirection,
-			Action onComplete)
+		private IEnumerator MoveRoutine(List<Vector2Int> path, Func<Vector2Int, GridCell> coordToCell, GridCell toCell,
+			SwipeDirection swipeDirection, Action onComplete)
 		{
 			isMoving = true;
-
-			
 
 			ballController.DetachFromCell();
 
@@ -86,7 +77,6 @@ namespace _Main.Scripts.BallSystem
 				ballController.BallRotateController.StartRotate(swipeDirection, moveDuration, steps);
 			}
 
-			
 			if (steps > 0)
 			{
 				float stepDuration = moveDuration / steps;

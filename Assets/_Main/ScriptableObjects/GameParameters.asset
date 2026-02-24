@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f636e9b7e6bd41379482654f2a3b7285, type: 3}
+  m_Name: GameParameters
+  m_EditorClassIdentifier: 
+  ballMoveDuration: 0.2
+  fillColors:
+  - colorType: 0
+    ballColor: {r: 0.8490566, g: 0.052064814, b: 0.052064814, a: 1}
+  - colorType: 1
+    ballColor: {r: 0.7924528, g: 0.39077023, b: 0.063545756, a: 1}
+  - colorType: 2
+    ballColor: {r: 0.8475805, g: 0.8962264, b: 0.04650232, a: 1}
+  - colorType: 3
+    ballColor: {r: 0.18180777, g: 0.7830189, b: 0, a: 1}
+  - colorType: 4
+    ballColor: {r: 0, g: 0.16215587, b: 1, a: 1}
+  - colorType: 5
+    ballColor: {r: 0.28314158, g: 0.034131378, b: 0.5566038, a: 1}
+  - colorType: 6
+    ballColor: {r: 0.8745206, g: 0.10902455, b: 0.9245283, a: 1}
+  - colorType: 7
+    ballColor: {r: 1, g: 1, b: 1, a: 1}
+  - colorType: 8
+    ballColor: {r: 0, g: 0, b: 0, a: 1}
