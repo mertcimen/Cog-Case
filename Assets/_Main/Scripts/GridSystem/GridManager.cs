@@ -13,17 +13,15 @@ namespace _Main.Scripts.GridSystem
 {
 	public class GridManager : MonoBehaviour
 	{
-		[SerializeField] private GridCell cellPrefab;
-		[SerializeField] private BallController ballPrefab; // şimdilik kullanılmıyor ama bırakıyorum
-
 		[Header("Layout")]
 		[SerializeField] private float cellSize = 1f;
-		[SerializeField] private float cellGap = 0f;
 
 		private Level currentLevel;
 		private Transform gridRoot;
 
 		private readonly Dictionary<Vector2Int, GridCell> cellsByCoord = new Dictionary<Vector2Int, GridCell>();
+
+		private readonly List<BallController> activeBalls = new List<BallController>(32);
 
 		private int paintableGridCount = 0;
 		private int paintedGridCount = 0;
@@ -68,7 +66,7 @@ namespace _Main.Scripts.GridSystem
 			paintedGridCount = 0;
 			isAnyBallMoving = false;
 
-			float spacing = cellSize + cellGap;
+			float spacing = cellSize;
 			float xCenterOffset = (gridWidth - 1) * 0.5f;
 			float yCenterOffset = (gridHeight - 1) * 0.5f;
 
@@ -101,6 +99,21 @@ namespace _Main.Scripts.GridSystem
 				var c = kv.Value;
 				if (!c.IsWall && c.CurrentBall != null)
 					PaintCell(c.Coordinate);
+			}
+
+			RebuildActiveBalls();
+			InputController.Instance.SetInputEnabled(true);
+		}
+
+		private void RebuildActiveBalls()
+		{
+			activeBalls.Clear();
+
+			foreach (var kv in cellsByCoord)
+			{
+				var cell = kv.Value;
+				if (cell != null && cell.CurrentBall != null)
+					activeBalls.Add(cell.CurrentBall);
 			}
 		}
 
@@ -182,7 +195,7 @@ namespace _Main.Scripts.GridSystem
 			CommitCommands(commands);
 
 			isAnyBallMoving = false;
-			if (InputController.Instance != null)
+			if (InputController.Instance != null && paintedGridCount < paintableGridCount)
 				InputController.Instance.SetInputEnabled(true);
 		}
 
@@ -205,6 +218,7 @@ namespace _Main.Scripts.GridSystem
 
 			if (paintedGridCount >= paintableGridCount && paintableGridCount > 0)
 			{
+				InputController.Instance.SetInputEnabled(false);
 				StartCoroutine(Delay());
 
 				IEnumerator Delay()
@@ -235,7 +249,6 @@ namespace _Main.Scripts.GridSystem
 
 		public void DespawnAllToPool()
 		{
-			
 			foreach (var kv in cellsByCoord)
 			{
 				if (kv.Value != null)
@@ -245,17 +258,197 @@ namespace _Main.Scripts.GridSystem
 			cellsByCoord.Clear();
 		}
 
-		// ✅ extra safety: Editor stop / destroy gibi senaryolarda da çalışsın
 		private void OnDestroy()
 		{
-			// LevelManager zaten çağıracak; ama garanti olsun:
 			if (PoolManager.Instance != null)
 				DespawnAllToPool();
 		}
 
 		// ---------------------------------------------------------
-		// Movement planning (segment sıkıştırma)
+		// Movement planning 
 		// ---------------------------------------------------------
+
+		private struct SegmentKey : IEquatable<SegmentKey>
+		{
+			public bool horizontal; // true=row, false=col
+			public int fixedIndex; // row y OR col x
+			public int segStart; // start x or y
+			public int segEnd; // end x or y
+
+			public SegmentKey(bool horizontal, int fixedIndex, int segStart, int segEnd)
+			{
+				this.horizontal = horizontal;
+				this.fixedIndex = fixedIndex;
+				this.segStart = segStart;
+				this.segEnd = segEnd;
+			}
+
+			public bool Equals(SegmentKey other)
+			{
+				return horizontal == other.horizontal && fixedIndex == other.fixedIndex && segStart == other.segStart &&
+				       segEnd == other.segEnd;
+			}
+
+			public override bool Equals(object obj) => obj is SegmentKey other && Equals(other);
+
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					int hash = (horizontal ? 1 : 0);
+					hash = (hash * 397) ^ fixedIndex;
+					hash = (hash * 397) ^ segStart;
+					hash = (hash * 397) ^ segEnd;
+					return hash;
+				}
+			}
+		}
+
+		private List<MoveCommand> BuildMoveCommands(SwipeDirection dir)
+		{
+			var commands = new List<MoveCommand>(activeBalls.Count);
+
+			bool horizontal = dir == SwipeDirection.Left || dir == SwipeDirection.Right;
+
+			// 1) Segment gruplama (yalnızca aktif toplar üzerinden)
+			var groups = new Dictionary<SegmentKey, List<GridCell>>(64);
+
+			for (int i = 0; i < activeBalls.Count; i++)
+			{
+				var ball = activeBalls[i];
+				if (ball == null) continue;
+
+				var cell = ball.CurrentCell;
+				if (cell == null) continue;
+				if (cell.IsWall) continue;
+
+				Vector2Int c = cell.Coordinate;
+
+				if (!TryFindSegmentBounds(c, horizontal, out int segStart, out int segEnd))
+					continue;
+
+				int fixedIndex = horizontal ? c.y : c.x;
+				var key = new SegmentKey(horizontal, fixedIndex, segStart, segEnd);
+
+				if (!groups.TryGetValue(key, out var list))
+				{
+					list = new List<GridCell>(4);
+					groups.Add(key, list);
+				}
+
+				list.Add(cell);
+			}
+
+			// 2) Her segmentte sıkıştırma ve komut üretimi
+			foreach (var kv in groups)
+			{
+				var key = kv.Key;
+				var ballsCells = kv.Value;
+				if (ballsCells == null || ballsCells.Count == 0)
+					continue;
+
+				if (horizontal)
+				{
+					int y = key.fixedIndex;
+
+					if (dir == SwipeDirection.Left)
+						ballsCells.Sort((a, b) => a.Coordinate.x.CompareTo(b.Coordinate.x));
+					else
+						ballsCells.Sort((a, b) => b.Coordinate.x.CompareTo(a.Coordinate.x));
+
+					for (int i = 0; i < ballsCells.Count; i++)
+					{
+						var fromCell = ballsCells[i];
+						int targetX = (dir == SwipeDirection.Left) ? (key.segStart + i) : (key.segEnd - i);
+						var to = new Vector2Int(targetX, y);
+
+						var ball = fromCell.CurrentBall;
+						if (ball == null) continue;
+
+						commands.Add(new MoveCommand
+						{
+							ball = ball,
+							movement = ball.MovementController,
+							from = fromCell.Coordinate,
+							to = to,
+							path = BuildStraightPath(fromCell.Coordinate, to)
+						});
+					}
+				}
+				else
+				{
+					int x = key.fixedIndex;
+
+					if (dir == SwipeDirection.Down)
+						ballsCells.Sort((a, b) => a.Coordinate.y.CompareTo(b.Coordinate.y));
+					else
+						ballsCells.Sort((a, b) => b.Coordinate.y.CompareTo(a.Coordinate.y));
+
+					for (int i = 0; i < ballsCells.Count; i++)
+					{
+						var fromCell = ballsCells[i];
+						int targetY = (dir == SwipeDirection.Down) ? (key.segStart + i) : (key.segEnd - i);
+						var to = new Vector2Int(x, targetY);
+
+						var ball = fromCell.CurrentBall;
+						if (ball == null) continue;
+
+						commands.Add(new MoveCommand
+						{
+							ball = ball,
+							movement = ball.MovementController,
+							from = fromCell.Coordinate,
+							to = to,
+							path = BuildStraightPath(fromCell.Coordinate, to)
+						});
+					}
+				}
+			}
+
+			return commands;
+		}
+
+		private bool TryFindSegmentBounds(Vector2Int start, bool horizontal, out int segStart, out int segEnd)
+		{
+			segStart = 0;
+			segEnd = 0;
+
+			if (!cellsByCoord.TryGetValue(start, out var startCell) || startCell == null || startCell.IsWall)
+				return false;
+
+			if (horizontal)
+			{
+				int y = start.y;
+
+				int xMin = start.x;
+				while (xMin - 1 >= 0 && !IsWall(new Vector2Int(xMin - 1, y)))
+					xMin--;
+
+				int xMax = start.x;
+				while (xMax + 1 < gridWidth && !IsWall(new Vector2Int(xMax + 1, y)))
+					xMax++;
+
+				segStart = xMin;
+				segEnd = xMax;
+				return true;
+			}
+			else
+			{
+				int x = start.x;
+
+				int yMin = start.y;
+				while (yMin - 1 >= 0 && !IsWall(new Vector2Int(x, yMin - 1)))
+					yMin--;
+
+				int yMax = start.y;
+				while (yMax + 1 < gridHeight && !IsWall(new Vector2Int(x, yMax + 1)))
+					yMax++;
+
+				segStart = yMin;
+				segEnd = yMax;
+				return true;
+			}
+		}
 
 		private struct MoveCommand
 		{
@@ -264,104 +457,6 @@ namespace _Main.Scripts.GridSystem
 			public Vector2Int from;
 			public Vector2Int to;
 			public List<Vector2Int> path; // from..to inclusive
-		}
-
-		private List<MoveCommand> BuildMoveCommands(SwipeDirection dir)
-		{
-			var commands = new List<MoveCommand>(32);
-
-			bool horizontal = dir == SwipeDirection.Left || dir == SwipeDirection.Right;
-
-			if (horizontal)
-			{
-				for (int y = 0; y < gridHeight; y++)
-				{
-					int x = 0;
-					while (x < gridWidth)
-					{
-						while (x < gridWidth && IsWall(new Vector2Int(x, y))) x++;
-						if (x >= gridWidth) break;
-
-						int segStart = x;
-						while (x < gridWidth && !IsWall(new Vector2Int(x, y))) x++;
-						int segEnd = x - 1;
-
-						var balls = CollectBallsInRowSegment(y, segStart, segEnd);
-						if (balls.Count == 0) continue;
-
-						if (dir == SwipeDirection.Left)
-							balls.Sort((a, b) => a.Coordinate.x.CompareTo(b.Coordinate.x));
-						else
-							balls.Sort((a, b) => b.Coordinate.x.CompareTo(a.Coordinate.x));
-
-						for (int i = 0; i < balls.Count; i++)
-						{
-							var fromCell = balls[i];
-							int targetX = (dir == SwipeDirection.Left) ? (segStart + i) : (segEnd - i);
-							var to = new Vector2Int(targetX, y);
-
-							var ball = fromCell.CurrentBall;
-							if (ball == null) continue;
-
-							var mv = ball.MovementController;
-							commands.Add(new MoveCommand
-							{
-								ball = ball,
-								movement = mv,
-								from = fromCell.Coordinate,
-								to = to,
-								path = BuildStraightPath(fromCell.Coordinate, to)
-							});
-						}
-					}
-				}
-			}
-			else
-			{
-				for (int x = 0; x < gridWidth; x++)
-				{
-					int y = 0;
-					while (y < gridHeight)
-					{
-						while (y < gridHeight && IsWall(new Vector2Int(x, y))) y++;
-						if (y >= gridHeight) break;
-
-						int segStart = y;
-						while (y < gridHeight && !IsWall(new Vector2Int(x, y))) y++;
-						int segEnd = y - 1;
-
-						var balls = CollectBallsInColSegment(x, segStart, segEnd);
-						if (balls.Count == 0) continue;
-
-						if (dir == SwipeDirection.Down)
-							balls.Sort((a, b) => a.Coordinate.y.CompareTo(b.Coordinate.y));
-						else
-							balls.Sort((a, b) => b.Coordinate.y.CompareTo(a.Coordinate.y));
-
-						for (int i = 0; i < balls.Count; i++)
-						{
-							var fromCell = balls[i];
-							int targetY = (dir == SwipeDirection.Down) ? (segStart + i) : (segEnd - i);
-							var to = new Vector2Int(x, targetY);
-
-							var ball = fromCell.CurrentBall;
-							if (ball == null) continue;
-
-							var mv = ball.MovementController;
-							commands.Add(new MoveCommand
-							{
-								ball = ball,
-								movement = mv,
-								from = fromCell.Coordinate,
-								to = to,
-								path = BuildStraightPath(fromCell.Coordinate, to)
-							});
-						}
-					}
-				}
-			}
-
-			return commands;
 		}
 
 		private List<GridCell> CollectBallsInRowSegment(int y, int startX, int endX)
@@ -433,13 +528,7 @@ namespace _Main.Scripts.GridSystem
 			return path;
 		}
 
-		private bool HasAnyBall()
-		{
-			foreach (var kv in cellsByCoord)
-				if (kv.Value.CurrentBall != null)
-					return true;
-			return false;
-		}
+		private bool HasAnyBall() => activeBalls.Count > 0;
 
 		private bool IsWall(Vector2Int c)
 		{

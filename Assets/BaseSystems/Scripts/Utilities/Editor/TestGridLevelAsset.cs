@@ -7,7 +7,8 @@ using UnityEngine;
 namespace BaseSystems.Scripts.Utilities.Editor
 {
 	/// <summary>
-	/// For quickly testing specific levels in editor
+	/// For quickly testing specific GridLevelAsset levels in editor.
+	/// New system: LevelsSO holds GridLevelAsset list, LevelManager spawns a single Level prefab at runtime.
 	/// </summary>
 	[InitializeOnLoad]
 	public static class TestGridLevelAsset
@@ -23,39 +24,44 @@ namespace BaseSystems.Scripts.Utilities.Editor
 		[InitializeOnLoadMethod]
 		private static void ShowStartSceneButton()
 		{
-			if(Application.isPlaying) return;
-			
+			if (Application.isPlaying) return;
+
 			ToolbarExtender.ToolbarExtender.RightToolbarGUI.Add(() =>
 			{
-				if (!LevelManager.Instance) return;
-				if(Application.isPlaying) return;
+				if (Application.isPlaying) return;
 
-				var levels = LevelManager.Instance.LevelsSO.Levels;
-				int gameSceneCount = levels.Count;
+				var lm = LevelManager.Instance;
+				if (!lm) return;
 
-				dropdown = new string[gameSceneCount + 1];
+				var so = lm.LevelsSO;
+				if (so == null || so.Levels == null || so.Levels.Count == 0) return;
+
+				int levelCount = so.Levels.Count;
+
+				// Build dropdown labels
+				dropdown = new string[levelCount + 1];
 				dropdown[0] = "Play Level";
-
-				for (int i = 0; i < gameSceneCount; i++)
-				{
-					dropdown[i + 1] = (i + 1) + " - Level";
-				}
+				for (int i = 0; i < levelCount; i++)
+					dropdown[i + 1] = $"{i + 1} - Level";
 
 				EditorGUILayout.BeginHorizontal();
 
-				if (EditorApplication.isPlaying && LevelManager.Instance.LevelNo > 0)
+				// While playing: show a small button to ping the currently loaded GridLevelAsset
+				if (EditorApplication.isPlaying && lm.LevelNo > 0)
 				{
-					int selectedIndex = LevelManager.Instance.LevelNo - 1;
-					Debug.Log("selectedIndex: "+selectedIndex);
-					var levelPrefab = LevelManager.Instance.LevelsSO.Levels[selectedIndex];
-
-					if (levelPrefab != null)
+					int selectedIndex = lm.LevelNo - 1;
+					if (selectedIndex >= 0 && selectedIndex < levelCount)
 					{
-						Texture prefabIcon = EditorGUIUtility.IconContent("Prefab Icon").image;
-						if (GUILayout.Button(new GUIContent(prefabIcon, "Open Level Prefab"), GUILayout.Width(25),
-							    GUILayout.Height(18)))
+						var levelAsset = so.Levels[selectedIndex];
+						if (levelAsset != null)
 						{
-							AssetDatabase.OpenAsset(levelPrefab.Level);
+							Texture icon = EditorGUIUtility.IconContent("ScriptableObject Icon").image;
+							if (GUILayout.Button(new GUIContent(icon, "Ping GridLevelAsset"), GUILayout.Width(25),
+								    GUILayout.Height(18)))
+							{
+								EditorGUIUtility.PingObject(levelAsset);
+								Selection.activeObject = levelAsset;
+							}
 						}
 					}
 				}
@@ -68,7 +74,8 @@ namespace BaseSystems.Scripts.Utilities.Editor
 				{
 					if (value > 0)
 					{
-						LevelManager.Instance.LevelNo = value;
+						// LevelNo is 1-based
+						lm.LevelNo = value;
 
 						EditorWindow.GetWindow(typeof(SceneView).Assembly.GetType("UnityEditor.GameView"))
 							.ShowNotification(new GUIContent("Testing Level " + value));
@@ -82,7 +89,6 @@ namespace BaseSystems.Scripts.Utilities.Editor
 				}
 
 				GUI.enabled = true;
-
 				EditorGUILayout.EndHorizontal();
 			});
 		}
@@ -94,7 +100,11 @@ namespace BaseSystems.Scripts.Utilities.Editor
 				EditorApplication.update -= EnterPlayMode;
 
 				EditorPrefs.SetBool("TestingLevel", true);
+
+				// Optional: disable any Level objects already present in the scene before entering playmode
+				// (old behavior kept for safety / legacy scenes)
 				SetActiveLevels(false);
+
 				EditorApplication.EnterPlaymode();
 			}
 		}
@@ -103,9 +113,11 @@ namespace BaseSystems.Scripts.Utilities.Editor
 		{
 			if (state == PlayModeStateChange.EnteredEditMode)
 			{
-				if (EditorPrefs.GetBool("TestingLevel").Equals(true))
+				if (EditorPrefs.GetBool("TestingLevel") == true)
 				{
 					EditorPrefs.SetBool("TestingLevel", false);
+
+					// Restore level objects if they existed in the scene
 					SetActiveLevels(true);
 				}
 			}

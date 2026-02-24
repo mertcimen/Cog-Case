@@ -1,5 +1,6 @@
 using _Main.Scripts.GamePlay;
 using BaseSystems.Scripts.Managers;
+using DG.Tweening;
 using Lofelt.NiceVibrations;
 using TMPro;
 using TriInspector;
@@ -45,11 +46,22 @@ namespace BaseSystems.Scripts.UI
 			SetLevelNo(LevelManager.Instance.LevelNo);
 		}
 
+		Tween fillTween;
+
 		public void SetProgress(float normalized)
 		{
 			if (progressBarImg == null) return;
 
-			progressBarImg.fillAmount = Mathf.Clamp01(normalized);
+			if (fillTween != null)
+			{
+				fillTween.Kill();
+			}
+
+			fillTween = progressBarImg.DOFillAmount(Mathf.Clamp01(normalized), 0.3f).OnComplete((() =>
+			{
+				fillTween.Kill();
+				fillTween = null;
+			}));
 		}
 
 		public void SetProgress(int painted, int required)

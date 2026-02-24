@@ -1,26 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using _Main.Scripts.LevelEditor;
 using BaseSystems.Scripts.LevelSystem;
 using UnityEngine;
 using TriInspector;
 
 namespace _Main.Scripts.Data
 {
-    [CreateAssetMenu(fileName = "Levels",menuName = "Data/Levels")]
+    [CreateAssetMenu(fileName = "Levels", menuName = "Data/Levels")]
     public class LevelsSO : ScriptableObject
     {
-        [SerializeField] private  List<LevelData> levelDatas = new();
-        public List<LevelData> Levels
+        [SerializeField] private List<GridLevelAsset> levels = new();
+
+        public List<GridLevelAsset> Levels
         {
-            get => levelDatas;
-            set => levelDatas = value;
+            get => levels;
+            set => levels = value;
         }
-        public void AddLevel(Level level)
+
+        public int Count => levels?.Count ?? 0;
+
+        public GridLevelAsset Get(int index)
         {
-            LevelData levelData = new LevelData();
-            levelData.Level = level;
-            levelData.IsLoopingLevel = true;
-            levelDatas.Add(levelData);
+            if (levels == null || levels.Count == 0) return null;
+            if (index < 0 || index >= levels.Count) return null;
+            return levels[index];
         }
     }
     [System.Serializable]

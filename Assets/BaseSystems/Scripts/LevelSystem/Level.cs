@@ -7,20 +7,31 @@ namespace BaseSystems.Scripts.LevelSystem
 	public class Level : MonoBehaviour
 	{
 		[SerializeField] private GridManager gridManager;
-		[SerializeField] private GridLevelAsset gridLevelAsset;
 
-		public virtual void Load()
+		private GridLevelAsset currentAsset;
+
+		public void Load(GridLevelAsset asset)
 		{
+			currentAsset = asset;
 			gameObject.SetActive(true);
-			gridManager.Initialize(this, gridLevelAsset);
+
+			if (gridManager == null)
+			{
+				Debug.LogError("Level: GridManager missing!");
+				return;
+			}
+
+			gridManager.Initialize(this, currentAsset);
 		}
 
-		public virtual void Play() { }
+		public virtual void Play()
+		{
+		}
 
-		// Pool object despawn before level destroyed. 
-		//TODO: level destroy logic will be change. Update for pool
 		public virtual void Unload()
 		{
+			// GridManager zaten OnDestroy ile despawn ediyor
+			// ama destroy öncesi temiz istersen direkt çağırabilirsin:
 			if (gridManager != null)
 				gridManager.DespawnAllToPool();
 		}

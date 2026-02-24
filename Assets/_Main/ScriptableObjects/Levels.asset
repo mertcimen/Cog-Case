@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87219c03f3f024d4b8f5c66e12fbf086, type: 3}
   m_Name: Levels
   m_EditorClassIdentifier: 
-  levelDatas:
-  - level: {fileID: 3210734524189124999, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
-    isLoopingLevel: 1
-  - level: {fileID: 3210734524189124999, guid: 399976cb17fb64210a9523f93cb32ed3, type: 3}
-    isLoopingLevel: 1
+  levels:
+  - {fileID: 11400000, guid: 93045dc67c3074408ba6abc81048e046, type: 2}
+  - {fileID: 11400000, guid: bce84beece0bf40879d00bfda595f809, type: 2}

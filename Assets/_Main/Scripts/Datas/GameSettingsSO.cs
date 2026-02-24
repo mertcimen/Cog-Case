@@ -10,6 +10,7 @@ namespace _Main.Scripts.Datas
     public class GameSettingsSO : SerializedScriptableObject
     {
         
+       
         private static GameSettingsSO _instance;
         public static GameSettingsSO Instance
         {
@@ -20,6 +21,10 @@ namespace _Main.Scripts.Datas
                 return _instance;
             }
         }
+
+        [Header("Ball Parameters")]
+        [SerializeField] private float ballMoveDuration;
+        
         
         #region Gold Reward Settings
 
@@ -62,7 +67,7 @@ namespace _Main.Scripts.Datas
         public long MaxGoldRewardOnWin => maxGoldRewardOnWin;
         public float WinButtonShowDelay => winButtonShowDelay;
         public bool EnableEditorAnalyticsLogs => enableEditorAnalyticsLogs;
-
+        public float BallMoveDuration => ballMoveDuration;
         #endregion
     
         #region Public Methods
