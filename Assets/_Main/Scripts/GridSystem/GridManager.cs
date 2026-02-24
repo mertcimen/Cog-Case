@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using _Main.Scripts.BallSystem;
 using _Main.Scripts.InputSystem;
 using _Main.Scripts.LevelEditor;
+using _Main.Scripts.Pooling;
 using BaseSystems.Scripts.LevelSystem;
 using BaseSystems.Scripts.Managers;
 using UnityEngine;
@@ -81,7 +82,7 @@ namespace _Main.Scripts.GridSystem
 				float x = (cell.coord.x - xCenterOffset) * spacing;
 				float z = (cell.coord.y - yCenterOffset) * spacing;
 
-				GridCell spawned = Instantiate(cellPrefab, gridRoot);
+				GridCell spawned = PoolManager.Instance.SpawnCell(gridRoot);
 				spawned.transform.localPosition = new Vector3(x, 0f, z);
 				spawned.transform.localRotation = Quaternion.identity;
 				spawned.transform.localScale = Vector3.one;
@@ -94,13 +95,24 @@ namespace _Main.Scripts.GridSystem
 				cellsByCoord[cell.coord] = spawned;
 			}
 
-			// Başlangıçta topun olduğu hücreler boyansın
+			// Cell Painting For Start if they has ball
 			foreach (var kv in cellsByCoord)
 			{
 				var c = kv.Value;
 				if (!c.IsWall && c.CurrentBall != null)
 					PaintCell(c.Coordinate);
 			}
+		}
+
+		private void ClearSpawned()
+		{
+			foreach (var kv in cellsByCoord)
+			{
+				if (kv.Value != null)
+					PoolManager.Instance.DespawnCell(kv.Value);
+			}
+
+			cellsByCoord.Clear();
 		}
 
 		private void UpdateProgressUI()
@@ -110,7 +122,7 @@ namespace _Main.Scripts.GridSystem
 
 			UIManager.Instance.InGameUI.SetProgress(paintedGridCount, paintableGridCount);
 		}
-		
+
 		private void HandleSwipe(SwipeDirection dir)
 		{
 			if (isAnyBallMoving) return;
@@ -161,14 +173,7 @@ namespace _Main.Scripts.GridSystem
 				var fromCell = cellsByCoord[cmd.from];
 				var toCell = cellsByCoord[cmd.to];
 
-				cmd.movement.MoveAlongPath(
-					cmd.path,
-					CoordToCell,
-					fromCell,
-					toCell,
-					() => pending--
-				);
-
+				cmd.movement.MoveAlongPath(cmd.path, CoordToCell, fromCell, toCell, () => pending--);
 			}
 
 			while (pending > 0)
@@ -181,19 +186,17 @@ namespace _Main.Scripts.GridSystem
 				InputController.Instance.SetInputEnabled(true);
 		}
 
-		
 		private GridCell CoordToCell(Vector2Int coord)
 		{
 			cellsByCoord.TryGetValue(coord, out var cell);
 			return cell;
 		}
-		
+
 		private void IncreaseRequiredPaintCount()
 		{
 			paintableGridCount++;
 			UpdateProgressUI();
 		}
-
 
 		public void IncreaseCurrentPaintedCount()
 		{
@@ -202,10 +205,16 @@ namespace _Main.Scripts.GridSystem
 
 			if (paintedGridCount >= paintableGridCount && paintableGridCount > 0)
 			{
-				LevelManager.Instance.Win();
+				StartCoroutine(Delay());
+
+				IEnumerator Delay()
+				{
+					yield return new WaitForSeconds(2f);
+
+					LevelManager.Instance.Win();
+				}
 			}
 		}
-
 
 		private Vector3 CoordToWorld(Vector2Int coord)
 		{
@@ -360,6 +369,7 @@ namespace _Main.Scripts.GridSystem
 
 			return result;
 		}
+
 		public bool TryGetCell(Vector2Int coord, out GridCell cell) => cellsByCoord.TryGetValue(coord, out cell);
 
 		private void CommitCommands(List<MoveCommand> commands)
@@ -440,16 +450,6 @@ namespace _Main.Scripts.GridSystem
 			gridRoot.localPosition = Vector3.zero;
 			gridRoot.localRotation = Quaternion.identity;
 			gridRoot.localScale = Vector3.one;
-		}
-
-		private void ClearSpawned()
-		{
-			cellsByCoord.Clear();
-
-			if (gridRoot == null) return;
-
-			for (int i = gridRoot.childCount - 1; i >= 0; i--)
-				Destroy(gridRoot.GetChild(i).gameObject);
 		}
 	}
 }

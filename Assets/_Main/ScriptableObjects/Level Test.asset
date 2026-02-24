@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb5895d4ab7e4b6cb0d398a9c76d790a, type: 3}
-  m_Name: GridLevelAsset1
+  m_Name: Level Test
   m_EditorClassIdentifier: 
   levelTime: 60
   grid:
@@ -43,7 +43,7 @@ MonoBehaviour:
     - coord: {x: 1, y: 1}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 2, y: 1}
       isWall: 0
       hasBall: 0
@@ -63,15 +63,15 @@ MonoBehaviour:
     - coord: {x: 1, y: 2}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 2, y: 2}
       isWall: 0
       hasBall: 0
       hasCoin: 1
     - coord: {x: 3, y: 2}
-      isWall: 0
+      isWall: 1
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 4, y: 2}
       isWall: 1
       hasBall: 0
@@ -83,15 +83,15 @@ MonoBehaviour:
     - coord: {x: 1, y: 3}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 2, y: 3}
       isWall: 0
       hasBall: 0
       hasCoin: 1
     - coord: {x: 3, y: 3}
-      isWall: 0
+      isWall: 1
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 4, y: 3}
       isWall: 1
       hasBall: 0
@@ -103,15 +103,15 @@ MonoBehaviour:
     - coord: {x: 1, y: 4}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 2, y: 4}
       isWall: 0
       hasBall: 0
       hasCoin: 1
     - coord: {x: 3, y: 4}
-      isWall: 0
+      isWall: 1
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 4, y: 4}
       isWall: 1
       hasBall: 0
@@ -123,15 +123,15 @@ MonoBehaviour:
     - coord: {x: 1, y: 5}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 2, y: 5}
       isWall: 0
       hasBall: 0
       hasCoin: 1
     - coord: {x: 3, y: 5}
-      isWall: 0
+      isWall: 1
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 4, y: 5}
       isWall: 1
       hasBall: 0
@@ -143,35 +143,35 @@ MonoBehaviour:
     - coord: {x: 1, y: 6}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 2, y: 6}
       isWall: 0
       hasBall: 0
       hasCoin: 1
     - coord: {x: 3, y: 6}
-      isWall: 0
+      isWall: 1
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 4, y: 6}
       isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 0, y: 7}
-      isWall: 1
-      hasBall: 0
+      isWall: 0
+      hasBall: 1
       hasCoin: 0
     - coord: {x: 1, y: 7}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 2, y: 7}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 3, y: 7}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 4, y: 7}
       isWall: 1
       hasBall: 0
@@ -183,14 +183,14 @@ MonoBehaviour:
     - coord: {x: 1, y: 8}
       isWall: 0
       hasBall: 0
-      hasCoin: 1
+      hasCoin: 0
     - coord: {x: 2, y: 8}
       isWall: 0
-      hasBall: 1
+      hasBall: 0
       hasCoin: 0
     - coord: {x: 3, y: 8}
       isWall: 0
-      hasBall: 1
+      hasBall: 0
       hasCoin: 0
     - coord: {x: 4, y: 8}
       isWall: 1

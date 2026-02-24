@@ -72,9 +72,10 @@ namespace _Main.Scripts.BallSystem
 				if (cell == null)
 					continue;
 
-				// Hücreye girildi -> boya 
+				 
 				cell.Paint();
-
+				cell.TryCollectCoin(transform.position);
+				
 				Vector3 start = transform.position;
 				Vector3 end = cell.transform.position;
 

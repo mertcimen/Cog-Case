@@ -1,22 +1,30 @@
 using _Main.Scripts.BallSystem;
-using _Main.Scripts.Datas;
+using _Main.Scripts.CollectableCoinSystem;
 using _Main.Scripts.LevelEditor;
+using _Main.Scripts.Pooling;
+using _Main.Scripts.WallSystem;
+using BaseSystems.CurrencySystem.Scripts;
 using DG.Tweening;
 using UnityEngine;
 
 namespace _Main.Scripts.GridSystem
 {
-	public class GridCell : MonoBehaviour
+	public class GridCell : MonoBehaviour, IPoolable
 	{
 		public Vector2Int Coordinate { get; private set; }
 		public bool IsWall { get; private set; }
-		public bool HasBall { get; private set; }
+		public bool HasBall => currentBall != null;
+		public bool HasCoin => currentCoin != null;
+
 		public BallController CurrentBall => currentBall;
 
 		[SerializeField] private SpriteRenderer paintSprite;
 
-		private BallController currentBall;
 		private GridManager gridManager;
+
+		private BallController currentBall;
+		private WallController currentWall;
+		private CoinController currentCoin;
 
 		private bool isPainted;
 
@@ -26,36 +34,50 @@ namespace _Main.Scripts.GridSystem
 
 			Coordinate = cellData.coord;
 			IsWall = cellData.isWall;
-			HasBall = cellData.hasBall;
-
-			if (IsWall && HasBall)
-				HasBall = false;
 
 			isPainted = false;
+			if (paintSprite != null)
+				paintSprite.enabled = false;
 
-			SpawnContent();
+			// Önce temizle (pool reuse)
+			ClearContentToPool();
+
+			// İçerik spawn kuralları:
+			// Wall varsa ball/coin yok
+			if (IsWall)
+			{
+				SpawnWall();
+				return;
+			}
+
+			if (cellData.hasBall)
+				SpawnBall();
+
+			if (cellData.hasCoin && currentBall == null) 
+				SpawnCoin();
 		}
 
-		private void SpawnContent()
+		private void SpawnBall()
 		{
-			currentBall = null;
-			if (HasBall)
-			{
-				var ballPrefab = ReferenceManagerSO.Instance.BallPrefab;
-				var ball = Instantiate(ballPrefab, transform);
-				ball.transform.localPosition = Vector3.zero;
-				ball.transform.localRotation = Quaternion.identity;
+			currentBall = PoolManager.Instance.SpawnBall(transform);
+			currentBall.transform.localPosition = Vector3.zero;
+			currentBall.transform.localRotation = Quaternion.identity;
 
-				currentBall = ball;
-				currentBall.Initialize(this);
-			}
-			else if (IsWall)
-			{
-				var wallPrefab = ReferenceManagerSO.Instance.WallPrefab;
-				var wall = Instantiate(wallPrefab, transform);
-				wall.transform.localPosition = Vector3.zero;
-				wall.transform.localRotation = Quaternion.identity;
-			}
+			currentBall.Initialize(this);
+		}
+
+		private void SpawnWall()
+		{
+			currentWall = PoolManager.Instance.SpawnWall(transform);
+			currentWall.transform.localPosition = Vector3.zero;
+			currentWall.transform.localRotation = Quaternion.identity;
+		}
+
+		private void SpawnCoin()
+		{
+			currentCoin = PoolManager.Instance.SpawnCoin(transform);
+			currentCoin.transform.localPosition = Vector3.zero;
+			currentCoin.transform.localRotation = Quaternion.identity;
 		}
 
 		public void Paint()
@@ -74,16 +96,68 @@ namespace _Main.Scripts.GridSystem
 			gridManager?.IncreaseCurrentPaintedCount();
 		}
 
+		public bool TryCollectCoin(Vector3 collectWorldPos)
+		{
+			if (currentCoin == null)
+				return false;
+
+			// Currency +1
+			currentCoin.Collect();
+			currentCoin = null;
+
+			return true;
+		}
+
 		public void ClearBallReference()
 		{
 			currentBall = null;
-			HasBall = false;
 		}
 
 		public void SetBallReference(BallController ball)
 		{
 			currentBall = ball;
-			HasBall = ball != null;
+		}
+
+		// GridCell pool reset
+		public void OnSpawned()
+		{
+			//
+		}
+
+		public void OnDespawned()
+		{
+			// reset for returning pool
+			gridManager = null;
+			isPainted = false;
+
+			if (paintSprite != null)
+				paintSprite.enabled = false;
+
+			ClearContentToPool();
+		}
+
+		private void ClearContentToPool()
+		{
+			// Ball
+			if (currentBall != null)
+			{
+				PoolManager.Instance.DespawnBall(currentBall);
+				currentBall = null;
+			}
+
+			// Wall
+			if (currentWall != null)
+			{
+				PoolManager.Instance.DespawnWall(currentWall);
+				currentWall = null;
+			}
+
+			// Coin
+			if (currentCoin != null)
+			{
+				PoolManager.Instance.DespawnCoin(currentCoin);
+				currentCoin = null;
+			}
 		}
 	}
 }

@@ -15,3 +15,5 @@ MonoBehaviour:
   levelDatas:
   - level: {fileID: 3210734524189124999, guid: 8f2be9d31462041a2bdb434ab6e22c7e, type: 3}
     isLoopingLevel: 1
+  - level: {fileID: 3210734524189124999, guid: 399976cb17fb64210a9523f93cb32ed3, type: 3}
+    isLoopingLevel: 1
