@@ -23,6 +23,7 @@ namespace BaseSystems.Scripts.UI
 		[SerializeField] private Button btnSettings;
 		public TimerCounter timerCounter;
 		[SerializeField] private Image progressBarImg;
+		[SerializeField] private TextMeshProUGUI progressText;
 
 		private void Awake()
 		{
@@ -54,6 +55,7 @@ namespace BaseSystems.Scripts.UI
 		public void SetProgress(int painted, int required)
 		{
 			float progress = (required <= 0) ? 0f : (float)painted / required;
+			progressText.SetText($"{painted}/{required}");
 			SetProgress(progress);
 		}
 
