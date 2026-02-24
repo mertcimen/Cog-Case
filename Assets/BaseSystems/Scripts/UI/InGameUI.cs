@@ -22,6 +22,8 @@ namespace BaseSystems.Scripts.UI
 		[SerializeField] private Button btnRestart;
 		[SerializeField] private Button btnSettings;
 		public TimerCounter timerCounter;
+		[SerializeField] private Image progressBarImg;
+
 		private void Awake()
 		{
 			btnRestart.onClick.AddListener(Restart);
@@ -42,6 +44,19 @@ namespace BaseSystems.Scripts.UI
 			SetLevelNo(LevelManager.Instance.LevelNo);
 		}
 
+		public void SetProgress(float normalized)
+		{
+			if (progressBarImg == null) return;
+
+			progressBarImg.fillAmount = Mathf.Clamp01(normalized);
+		}
+
+		public void SetProgress(int painted, int required)
+		{
+			float progress = (required <= 0) ? 0f : (float)painted / required;
+			SetProgress(progress);
+		}
+
 		public void SetLevelNo(int levelNo)
 		{
 			if (txtLevelNo)
@@ -59,7 +74,9 @@ namespace BaseSystems.Scripts.UI
 			HapticManager.Instance.PlayHaptic(HapticPatterns.PresetType.MediumImpact);
 			if (askBeforeRestart)
 			{
-				MessageBox.Scripts.MessageBox.Instance.Show("Are you sure you want to restart?", "Restart", MessageBox.Scripts.MessageBox.MessageBoxButtons.YesNo, MessageBox.Scripts.MessageBox.MessageBoxType.Question, LevelManager.Instance.RestartLevel);
+				MessageBox.Scripts.MessageBox.Instance.Show("Are you sure you want to restart?", "Restart",
+					MessageBox.Scripts.MessageBox.MessageBoxButtons.YesNo,
+					MessageBox.Scripts.MessageBox.MessageBoxType.Question, LevelManager.Instance.RestartLevel);
 			}
 			else
 			{
