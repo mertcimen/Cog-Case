@@ -12,8 +12,8 @@ namespace _Main.Scripts.BallSystem
 		private BallController ballController;
 
 		[Header("Movement")]
-		[SerializeField] private float moveSpeed = 8f;
-		[SerializeField] private float minStepDuration = 0.02f;
+		[SerializeField] private float moveDuration = 0.35f; // independent of path length
+		
 
 		private bool isMoving;
 		public bool IsMoving => isMoving;
@@ -41,9 +41,9 @@ namespace _Main.Scripts.BallSystem
 				return;
 			}
 
-			if (moveSpeed <= 0f)
+			if (moveDuration <= 0f)
 			{
-				Debug.LogError("BallMovementController: moveSpeed must be > 0.");
+				Debug.LogError("BallMovementController: moveDuration must be > 0.");
 				onComplete?.Invoke();
 				return;
 			}
@@ -56,36 +56,46 @@ namespace _Main.Scripts.BallSystem
 		{
 			isMoving = true;
 
-			// Cleared For Start 
+			
 			ballController.DetachFromCell();
+
+			// Start cell paint + snap
+			GridCell startCell = coordToCell(path[0]);
+			if (startCell != null)
 			{
-				GridCell startCell = coordToCell(path[0]);
-				if (startCell != null)
-				{
-					startCell.Paint();
-					transform.position = startCell.transform.position;
-				}
+				startCell.Paint();
+				startCell.TryCollectCoin(transform.position);
+				transform.position = startCell.transform.position;
 			}
 
+			int steps = path.Count - 1;
+			if (steps <= 0)
+			{
+				Finish(toCell, onComplete);
+				yield break;
+			}
+
+			//  moveDuration per gridCell
+			float stepDuration = moveDuration / steps;
+
+			
 			for (int i = 1; i < path.Count; i++)
 			{
 				GridCell cell = coordToCell(path[i]);
 				if (cell == null)
 					continue;
 
+				// Arrived To cell
 				cell.Paint();
 				cell.TryCollectCoin(transform.position);
 
 				Vector3 start = transform.position;
 				Vector3 end = cell.transform.position;
 
-				float distance = Vector3.Distance(start, end);
-				float duration = Mathf.Max(minStepDuration, distance / moveSpeed);
-
 				float t = 0f;
 				while (t < 1f)
 				{
-					t += Time.deltaTime / duration;
+					t += Time.deltaTime / Mathf.Max(0.0001f, stepDuration);
 					transform.position = Vector3.Lerp(start, end, t);
 					yield return null;
 				}
@@ -93,8 +103,14 @@ namespace _Main.Scripts.BallSystem
 				transform.position = end;
 			}
 
+			Finish(toCell, onComplete);
+		}
+
+		private void Finish(GridCell toCell, Action onComplete)
+		{
 			AudioManager.Instance.PlayAudio(AudioName.BallHit);
-			//Set to ball to last cell in path after move sequence finished.
+
+			//Move Seq. finished
 			ballController.AttachToCell(toCell);
 
 			isMoving = false;
