@@ -32,7 +32,8 @@ namespace _Main.Scripts.LevelEditor
 		private enum EditMode
 		{
 			WallPaint,
-			BallPlace
+			BallPlace,
+			CoinPlace
 		}
 
 		private enum SwipeDir
@@ -206,7 +207,8 @@ namespace _Main.Scripts.LevelEditor
 			EditorGUILayout.LabelField("Edit Mode", EditorStyles.boldLabel);
 
 			EditorGUI.BeginChangeCheck();
-			_mode = (EditMode)GUILayout.Toolbar((int)_mode, new[] { "Wall Paint", "Ball Place" });
+			_mode = (EditMode)GUILayout.Toolbar((int)_mode, new[] { "Wall Paint", "Ball Place", "Coin Place" });
+
 			if (EditorGUI.EndChangeCheck())
 			{
 				ResetDragState();
@@ -215,8 +217,12 @@ namespace _Main.Scripts.LevelEditor
 
 			EditorGUILayout.HelpBox(
 				_mode == EditMode.WallPaint
-					? "Wall Paint: Sol tık basılı tutup sürükleyerek duvar ekle/sil. İlk tıklama ekleme mi silme mi olacağını belirler."
-					: "Ball Place: Hücreye tıklayınca top ekler/siler. Duvar üstüne top konulamaz.", MessageType.Info);
+					?
+					"Wall Paint: Sol tık basılı tutup sürükleyerek duvar ekle/sil. İlk tıklama ekleme mi silme mi olacağını belirler."
+					: _mode == EditMode.BallPlace
+						? "Ball Place: Hücreye tıklayınca top ekler/siler. Duvar üstüne top konulamaz."
+						: "Coin Place: Hücreye tıklayınca coin ekler/siler. Duvar veya top olan hücreye coin konulamaz.",
+				MessageType.Info);
 
 			EditorGUILayout.EndVertical();
 		}
@@ -656,6 +662,18 @@ namespace _Main.Scripts.LevelEditor
 				EditorGUI.DrawRect(inner, GUI.color);
 			}
 
+			if (cell.hasCoin)
+			{
+				GUI.color = new Color(1f, 0.85f, 0.1f); /// yellow for coin 
+				var coinRect = rect;
+				coinRect.width = 6;
+				coinRect.height = 6;
+				coinRect.x = rect.x + rect.width - 8; // Upper Right 
+				coinRect.y = rect.y + 2;
+
+				EditorGUI.DrawRect(coinRect, GUI.color);
+			}
+
 			GUI.color = Color.black;
 			Handles.DrawSolidRectangleWithOutline(rect, Color.clear, Color.black);
 
@@ -684,13 +702,25 @@ namespace _Main.Scripts.LevelEditor
 					PaintWallIfNeeded(grid, c);
 				}
 			}
-			else // BallPlace
+			else if (_mode == EditMode.BallPlace)
 			{
 				if (e.type == EventType.MouseDown && e.button == 0)
 				{
 					e.Use();
 					Undo.RecordObject(_asset, "Toggle Ball");
 					grid.ToggleBall(c);
+					MarkDirty();
+					_hasWinAnalysis = false;
+					Repaint();
+				}
+			}
+			else // CoinPlace
+			{
+				if (e.type == EventType.MouseDown && e.button == 0)
+				{
+					e.Use();
+					Undo.RecordObject(_asset, "Toggle Coin");
+					grid.ToggleCoin(c);
 					MarkDirty();
 					_hasWinAnalysis = false;
 					Repaint();

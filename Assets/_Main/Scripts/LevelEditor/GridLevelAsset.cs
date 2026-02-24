@@ -33,8 +33,8 @@ namespace _Main.Scripts.LevelEditor
 		public IEnumerable<Vector2Int> AllCoordinates()
 		{
 			for (int y = 0; y < gridSize.y; y++)
-			for (int x = 0; x < gridSize.x; x++)
-				yield return new Vector2Int(x, y);
+				for (int x = 0; x < gridSize.x; x++)
+					yield return new Vector2Int(x, y);
 		}
 
 		public void EnsureGridStorage()
@@ -61,12 +61,7 @@ namespace _Main.Scripts.LevelEditor
 				}
 				else
 				{
-					newCells.Add(new CellData
-					{
-						coord = c,
-						isWall = false,
-						hasBall = false
-					});
+					newCells.Add(new CellData { coord = c, isWall = false, hasBall = false, hasCoin = false });
 				}
 			}
 
@@ -144,10 +139,48 @@ namespace _Main.Scripts.LevelEditor
 
 			cell.isWall = isWall;
 
-		
 			if (isWall)
+			{
 				cell.hasBall = false;
+				cell.hasCoin = false; // NEW
+			}
 
+			SetCell(cell);
+		}
+
+
+		public bool HasCoin(Vector2Int c)
+		{
+			return TryGetCell(c, out var cell) && cell.hasCoin;
+		}
+
+		public void SetCoin(Vector2Int c, bool hasCoin)
+		{
+			if (!TryGetCell(c, out var cell)) return;
+			
+			if (cell.isWall || cell.hasBall)
+			{
+				cell.hasCoin = false;
+				SetCell(cell);
+				return;
+			}
+
+			cell.hasCoin = hasCoin;
+			SetCell(cell);
+		}
+
+		public void ToggleCoin(Vector2Int c)
+		{
+			if (!TryGetCell(c, out var cell)) return;
+			
+			if (cell.isWall || cell.hasBall)
+			{
+				cell.hasCoin = false;
+				SetCell(cell);
+				return;
+			}
+
+			cell.hasCoin = !cell.hasCoin;
 			SetCell(cell);
 		}
 
@@ -160,17 +193,22 @@ namespace _Main.Scripts.LevelEditor
 		{
 			if (!TryGetCell(c, out var cell)) return;
 
-			
 			if (cell.isWall)
 			{
 				cell.hasBall = false;
+				cell.hasCoin = false; 
 				SetCell(cell);
 				return;
 			}
 
 			cell.hasBall = hasBall;
+
+			if (hasBall)
+				cell.hasCoin = false; 
+
 			SetCell(cell);
 		}
+
 
 		public void ToggleBall(Vector2Int c)
 		{
@@ -179,11 +217,16 @@ namespace _Main.Scripts.LevelEditor
 			if (cell.isWall)
 			{
 				cell.hasBall = false;
+				cell.hasCoin = false; // NEW
 				SetCell(cell);
 				return;
 			}
 
 			cell.hasBall = !cell.hasBall;
+
+			if (cell.hasBall)
+				cell.hasCoin = false; // NEW
+
 			SetCell(cell);
 		}
 
@@ -207,5 +250,6 @@ namespace _Main.Scripts.LevelEditor
 		public Vector2Int coord;
 		public bool isWall;
 		public bool hasBall;
+		public bool hasCoin;
 	}
 }
