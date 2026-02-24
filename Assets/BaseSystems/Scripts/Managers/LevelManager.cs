@@ -1,7 +1,7 @@
 using _Main.Scripts.Data;
+using BaseSystems.AudioSystem.Scripts;
 using BaseSystems.Scripts.LevelSystem;
 using BaseSystems.Scripts.Utilities;
-using Fiber.AudioSystem;
 using Fiber.Utilities;
 using TriInspector;
 using UnityEngine;
@@ -167,8 +167,14 @@ namespace BaseSystems.Scripts.Managers
 		private void UnloadLevel()
 		{
 			OnLevelUnload?.Invoke();
+
+			
+			if (CurrentLevel != null)
+				CurrentLevel.Unload();
+
 			Destroy(CurrentLevel.gameObject);
 		}
+
 
 		// -----------------------------
 		// RESULT

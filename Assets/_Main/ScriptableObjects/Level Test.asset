@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelTime: 60
   grid:
-    gridSize: {x: 5, y: 10}
+    gridSize: {x: 5, y: 14}
     cells:
     - coord: {x: 0, y: 0}
       isWall: 1
@@ -42,7 +42,7 @@ MonoBehaviour:
       hasCoin: 0
     - coord: {x: 1, y: 1}
       isWall: 0
-      hasBall: 0
+      hasBall: 1
       hasCoin: 0
     - coord: {x: 2, y: 1}
       isWall: 0
@@ -201,18 +201,98 @@ MonoBehaviour:
       hasBall: 0
       hasCoin: 0
     - coord: {x: 1, y: 9}
-      isWall: 1
+      isWall: 0
       hasBall: 0
       hasCoin: 0
     - coord: {x: 2, y: 9}
-      isWall: 1
+      isWall: 0
       hasBall: 0
       hasCoin: 0
     - coord: {x: 3, y: 9}
-      isWall: 1
+      isWall: 0
       hasBall: 0
       hasCoin: 0
     - coord: {x: 4, y: 9}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 0, y: 10}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 1, y: 10}
+      isWall: 0
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 2, y: 10}
+      isWall: 0
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 3, y: 10}
+      isWall: 0
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 4, y: 10}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 0, y: 11}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 1, y: 11}
+      isWall: 0
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 2, y: 11}
+      isWall: 0
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 3, y: 11}
+      isWall: 0
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 4, y: 11}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 0, y: 12}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 1, y: 12}
+      isWall: 0
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 2, y: 12}
+      isWall: 0
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 3, y: 12}
+      isWall: 0
+      hasBall: 1
+      hasCoin: 0
+    - coord: {x: 4, y: 12}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 0, y: 13}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 1, y: 13}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 2, y: 13}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 3, y: 13}
+      isWall: 1
+      hasBall: 0
+      hasCoin: 0
+    - coord: {x: 4, y: 13}
       isWall: 1
       hasBall: 0
       hasCoin: 0

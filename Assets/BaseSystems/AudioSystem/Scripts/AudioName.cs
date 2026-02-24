@@ -1,4 +1,4 @@
-namespace Fiber.AudioSystem
+namespace BaseSystems.AudioSystem.Scripts
 {
 	/// <summary>
 	/// Enums of the AudioSystem
@@ -17,6 +17,7 @@ namespace Fiber.AudioSystem
 		Pop2,
 		Pop3,
 		Coin,
-		TimerWarning
+		TimerWarning,
+		BallHit
 	}
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Fiber.AudioSystem
+namespace BaseSystems.AudioSystem.Scripts
 {
 	public class AudioParams
 	{

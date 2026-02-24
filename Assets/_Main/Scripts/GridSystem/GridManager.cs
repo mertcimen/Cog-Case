@@ -233,6 +233,26 @@ namespace _Main.Scripts.GridSystem
 			cell.Paint();
 		}
 
+		public void DespawnAllToPool()
+		{
+			
+			foreach (var kv in cellsByCoord)
+			{
+				if (kv.Value != null)
+					PoolManager.Instance.DespawnCell(kv.Value);
+			}
+
+			cellsByCoord.Clear();
+		}
+
+		// ✅ extra safety: Editor stop / destroy gibi senaryolarda da çalışsın
+		private void OnDestroy()
+		{
+			// LevelManager zaten çağıracak; ama garanti olsun:
+			if (PoolManager.Instance != null)
+				DespawnAllToPool();
+		}
+
 		// ---------------------------------------------------------
 		// Movement planning (segment sıkıştırma)
 		// ---------------------------------------------------------

@@ -1,6 +1,6 @@
-using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using AYellowpaper.SerializedCollections;
 using BaseSystems.Scripts.Utilities;
 using DG.Tweening;
@@ -9,7 +9,7 @@ using TriInspector;
 using UnityEngine;
 using UnityEngine.Pool;
 
-namespace Fiber.AudioSystem
+namespace BaseSystems.AudioSystem.Scripts
 {
 	public class AudioManager : Singleton<AudioManager>
 	{

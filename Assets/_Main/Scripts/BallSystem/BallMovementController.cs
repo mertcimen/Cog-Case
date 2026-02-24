@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using _Main.Scripts.GridSystem;
+using BaseSystems.AudioSystem.Scripts;
 using UnityEngine;
 
 namespace _Main.Scripts.BallSystem
@@ -56,7 +57,7 @@ namespace _Main.Scripts.BallSystem
 			isMoving = true;
 
 			// Cleared For Start 
-			ballController.DetachFromCell(); 
+			ballController.DetachFromCell();
 			{
 				GridCell startCell = coordToCell(path[0]);
 				if (startCell != null)
@@ -72,10 +73,9 @@ namespace _Main.Scripts.BallSystem
 				if (cell == null)
 					continue;
 
-				 
 				cell.Paint();
 				cell.TryCollectCoin(transform.position);
-				
+
 				Vector3 start = transform.position;
 				Vector3 end = cell.transform.position;
 
@@ -93,7 +93,8 @@ namespace _Main.Scripts.BallSystem
 				transform.position = end;
 			}
 
-			// Hareket bitti: hedef hücreye kendini ata
+			AudioManager.Instance.PlayAudio(AudioName.BallHit);
+			//Set to ball to last cell in path after move sequence finished.
 			ballController.AttachToCell(toCell);
 
 			isMoving = false;

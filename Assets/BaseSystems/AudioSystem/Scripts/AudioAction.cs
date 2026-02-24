@@ -1,4 +1,4 @@
-namespace Fiber.AudioSystem
+namespace BaseSystems.AudioSystem.Scripts
 {
 	public enum AudioAction
 	{

@@ -1,6 +1,6 @@
+using BaseSystems.AudioSystem.Scripts;
 using BaseSystems.Scripts.Managers;
 using DG.Tweening;
-using Fiber.AudioSystem;
 using Lofelt.NiceVibrations;
 using UnityEngine;
 using UnityEngine.UI;
