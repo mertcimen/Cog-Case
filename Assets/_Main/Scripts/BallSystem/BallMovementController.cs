@@ -23,7 +23,6 @@ namespace _Main.Scripts.BallSystem
 		{
 			ballController = controller;
 			moveDuration = ReferenceManagerSO.Instance.GameParameters.GetBallMoveDuration();
-			
 		}
 
 		public void MoveAlongPath(List<Vector2Int> path, Func<Vector2Int, GridCell> coordToCell, GridCell fromCell,
@@ -58,7 +57,7 @@ namespace _Main.Scripts.BallSystem
 			SwipeDirection swipeDirection, Action onComplete)
 		{
 			isMoving = true;
-
+			ballController.KillBounceEffect();
 			ballController.DetachFromCell();
 
 			// Start cell paint + snap
@@ -110,7 +109,7 @@ namespace _Main.Scripts.BallSystem
 		private void Finish(GridCell toCell, Action onComplete)
 		{
 			AudioManager.Instance.PlayAudio(AudioName.BallHit);
-
+			ballController.HitBounceEffect();
 			// Stop rotate
 			if (ballController != null && ballController.BallRotateController != null)
 				ballController.BallRotateController.StopRotate();

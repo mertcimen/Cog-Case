@@ -134,7 +134,6 @@ namespace _Main.Scripts.GridSystem
 			// Center in local space is (0,0,0) by design.
 			Vector3 centerLocal = Vector3.zero;
 
-			// Helper: keep border's current Y (height), move only X/Z in grid plane.
 			void SetBorder(Transform t, float xLocal, float zLocal)
 			{
 				if (t == null) return;
@@ -149,7 +148,6 @@ namespace _Main.Scripts.GridSystem
 			// Right / Left: Z = center, X = edge +/- offset
 			SetBorder(right, +halfW + offset, centerLocal.z);
 			SetBorder(left, -halfW - offset, centerLocal.z);
-
 			// Top / Down: X = center, Z = edge +/- offset
 			SetBorder(top, centerLocal.x, +halfH + offset);
 			SetBorder(down, centerLocal.x, -halfH - offset);
@@ -223,7 +221,6 @@ namespace _Main.Scripts.GridSystem
 
 			int pending = 0;
 
-			// aynı anda hareket
 			for (int i = 0; i < commands.Count; i++)
 			{
 				var cmd = commands[i];
@@ -288,7 +285,7 @@ namespace _Main.Scripts.GridSystem
 							particle.Play();
 						}
 
-						yield return new WaitForSeconds(0.7f);
+						yield return new WaitForSeconds(0.2f);
 					}
 
 					yield return new WaitForSeconds(1f);
@@ -336,49 +333,12 @@ namespace _Main.Scripts.GridSystem
 		// Movement planning 
 		// ---------------------------------------------------------
 
-		private struct SegmentKey : IEquatable<SegmentKey>
-		{
-			public bool horizontal; // true=row, false=col
-			public int fixedIndex; // row y OR col x
-			public int segStart; // start x or y
-			public int segEnd; // end x or y
-
-			public SegmentKey(bool horizontal, int fixedIndex, int segStart, int segEnd)
-			{
-				this.horizontal = horizontal;
-				this.fixedIndex = fixedIndex;
-				this.segStart = segStart;
-				this.segEnd = segEnd;
-			}
-
-			public bool Equals(SegmentKey other)
-			{
-				return horizontal == other.horizontal && fixedIndex == other.fixedIndex && segStart == other.segStart &&
-				       segEnd == other.segEnd;
-			}
-
-			public override bool Equals(object obj) => obj is SegmentKey other && Equals(other);
-
-			public override int GetHashCode()
-			{
-				unchecked
-				{
-					int hash = (horizontal ? 1 : 0);
-					hash = (hash * 397) ^ fixedIndex;
-					hash = (hash * 397) ^ segStart;
-					hash = (hash * 397) ^ segEnd;
-					return hash;
-				}
-			}
-		}
-
 		private List<MoveCommand> BuildMoveCommands(SwipeDirection dir)
 		{
 			var commands = new List<MoveCommand>(activeBalls.Count);
 
 			bool horizontal = dir == SwipeDirection.Left || dir == SwipeDirection.Right;
 
-			// 1) Segment gruplama (yalnızca aktif toplar üzerinden)
 			var groups = new Dictionary<SegmentKey, List<GridCell>>(64);
 
 			for (int i = 0; i < activeBalls.Count; i++)
@@ -407,7 +367,6 @@ namespace _Main.Scripts.GridSystem
 				list.Add(cell);
 			}
 
-			// 2) Her segmentte sıkıştırma ve komut üretimi
 			foreach (var kv in groups)
 			{
 				var key = kv.Key;
@@ -518,50 +477,11 @@ namespace _Main.Scripts.GridSystem
 			}
 		}
 
-		private struct MoveCommand
-		{
-			public BallController ball;
-			public BallMovementController movement;
-			public Vector2Int from;
-			public Vector2Int to;
-			public List<Vector2Int> path; // from..to inclusive
-		}
-
-		private List<GridCell> CollectBallsInRowSegment(int y, int startX, int endX)
-		{
-			var result = new List<GridCell>(4);
-			for (int x = startX; x <= endX; x++)
-			{
-				var c = new Vector2Int(x, y);
-				if (cellsByCoord.TryGetValue(c, out var cell) && cell.CurrentBall != null)
-					result.Add(cell);
-			}
-
-			return result;
-		}
-
-		private List<GridCell> CollectBallsInColSegment(int x, int startY, int endY)
-		{
-			var result = new List<GridCell>(4);
-			for (int y = startY; y <= endY; y++)
-			{
-				var c = new Vector2Int(x, y);
-				if (cellsByCoord.TryGetValue(c, out var cell) && cell.CurrentBall != null)
-					result.Add(cell);
-			}
-
-			return result;
-		}
-
-		public bool TryGetCell(Vector2Int coord, out GridCell cell) => cellsByCoord.TryGetValue(coord, out cell);
-
 		private void CommitCommands(List<MoveCommand> commands)
 		{
-			// 1) tüm cell ball ref’lerini temizle
 			foreach (var kv in cellsByCoord)
 				kv.Value.ClearBallReference();
 
-			// 2) yeni konumlara ata
 			for (int i = 0; i < commands.Count; i++)
 			{
 				var cmd = commands[i];
@@ -572,7 +492,6 @@ namespace _Main.Scripts.GridSystem
 
 				toCell.SetBallReference(cmd.ball);
 				cmd.ball.SetCurrentCell(toCell);
-
 				// final world pos
 				cmd.ball.transform.position = toCell.transform.position;
 			}
@@ -627,6 +546,51 @@ namespace _Main.Scripts.GridSystem
 			gridRoot.localPosition = Vector3.zero;
 			gridRoot.localRotation = Quaternion.identity;
 			gridRoot.localScale = Vector3.one;
+		}
+
+		private struct SegmentKey : IEquatable<SegmentKey>
+		{
+			public bool horizontal; // true=row, false=col
+			public int fixedIndex; // row y OR col x
+			public int segStart; // start x or y
+			public int segEnd; // end x or y
+
+			public SegmentKey(bool horizontal, int fixedIndex, int segStart, int segEnd)
+			{
+				this.horizontal = horizontal;
+				this.fixedIndex = fixedIndex;
+				this.segStart = segStart;
+				this.segEnd = segEnd;
+			}
+
+			public bool Equals(SegmentKey other)
+			{
+				return horizontal == other.horizontal && fixedIndex == other.fixedIndex && segStart == other.segStart &&
+				       segEnd == other.segEnd;
+			}
+
+			public override bool Equals(object obj) => obj is SegmentKey other && Equals(other);
+
+			public override int GetHashCode()
+			{
+				unchecked
+				{
+					int hash = (horizontal ? 1 : 0);
+					hash = (hash * 397) ^ fixedIndex;
+					hash = (hash * 397) ^ segStart;
+					hash = (hash * 397) ^ segEnd;
+					return hash;
+				}
+			}
+		}
+
+		private struct MoveCommand
+		{
+			public BallController ball;
+			public BallMovementController movement;
+			public Vector2Int from;
+			public Vector2Int to;
+			public List<Vector2Int> path; // from..to inclusive
 		}
 	}
 }

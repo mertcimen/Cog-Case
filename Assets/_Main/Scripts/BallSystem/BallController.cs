@@ -13,8 +13,9 @@ namespace _Main.Scripts.BallSystem
 
 		public BallMovementController MovementController => movementController;
 		public BallRotateController BallRotateController => ballRotateController;
-		
+
 		private Tween bounceTween;
+
 		public void Initialize(GridCell cell)
 		{
 			if (movementController == null)
@@ -56,13 +57,39 @@ namespace _Main.Scripts.BallSystem
 			transform.position = targetCell.transform.position;
 		}
 
+		private Tween squishTween;
+
 		public void HitBounceEffect()
 		{
-			
-			// bounceTween = transform 
-			
-			
+			KillBounceEffect();
+
+			// Bounce (position)
+			bounceTween = transform.DOJump(transform.position, 0.5f, 1, 0.2f).SetEase(Ease.OutBounce)
+				.OnComplete(() => { bounceTween = null; });
+
+			Vector3 originalScale = Vector3.one;
+
+			squishTween = DOTween.Sequence().Append(transform.DOScale(new Vector3(1.2f, 0.8f, 1f), 0.08f))
+				.Append(transform.DOScale(new Vector3(0.9f, 1.1f, 1f), 0.08f))
+				.Append(transform.DOScale(originalScale, 0.1f)).SetEase(Ease.OutQuad)
+				.OnComplete(() => { squishTween = null; });
 		}
-		
+
+		public void KillBounceEffect()
+		{
+			if (bounceTween != null)
+			{
+				bounceTween.Kill();
+				bounceTween = null;
+			}
+
+			if (squishTween != null)
+			{
+				squishTween.Kill();
+				squishTween = null;
+			}
+
+			transform.localScale = Vector3.one;
+		}
 	}
 }
