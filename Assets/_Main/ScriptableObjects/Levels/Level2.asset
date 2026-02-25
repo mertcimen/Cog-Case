@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Level2
   m_EditorClassIdentifier: 
   levelTime: 60
-  levelPaintColor: 2
+  levelPaintColor: 6
   grid:
     gridSize: {x: 5, y: 14}
     cells:

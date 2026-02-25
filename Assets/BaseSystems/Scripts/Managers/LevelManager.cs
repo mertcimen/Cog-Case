@@ -49,8 +49,8 @@ namespace BaseSystems.Scripts.Managers
 			if (levelsSO == null || levelsSO.Count == 0)
 				Debug.LogWarning($"{name}: LevelsSO is empty!", this);
 
-			if (!isActiveTestLevel && levelPrefab == null)
-				Debug.LogError($"{name}: Level Prefab missing!", this);
+			// if (!isActiveTestLevel && levelPrefab == null)
+			// 	Debug.LogError($"{name}: Level Prefab missing!", this);
 		}
 
 		private void Start()

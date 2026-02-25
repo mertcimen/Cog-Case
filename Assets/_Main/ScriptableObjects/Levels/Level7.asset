@@ -15,11 +15,11 @@ MonoBehaviour:
   levelTime: 60
   levelPaintColor: 0
   grid:
-    gridSize: {x: 10, y: 10}
+    gridSize: {x: 7, y: 7}
     cells:
     - coord: {x: 0, y: 0}
       isWall: 0
-      hasBall: 0
+      hasBall: 1
       hasCoin: 0
     - coord: {x: 1, y: 0}
       isWall: 0
@@ -38,22 +38,10 @@ MonoBehaviour:
       hasBall: 0
       hasCoin: 0
     - coord: {x: 5, y: 0}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 6, y: 0}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 7, y: 0}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 0}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 0}
       isWall: 0
       hasBall: 0
       hasCoin: 0
@@ -70,7 +58,7 @@ MonoBehaviour:
       hasBall: 0
       hasCoin: 0
     - coord: {x: 3, y: 1}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 4, y: 1}
@@ -78,39 +66,27 @@ MonoBehaviour:
       hasBall: 0
       hasCoin: 0
     - coord: {x: 5, y: 1}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 6, y: 1}
       isWall: 0
       hasBall: 0
       hasCoin: 0
-    - coord: {x: 7, y: 1}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 1}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 1}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
     - coord: {x: 0, y: 2}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 1, y: 2}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 2, y: 2}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 3, y: 2}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 4, y: 2}
@@ -118,31 +94,19 @@ MonoBehaviour:
       hasBall: 0
       hasCoin: 0
     - coord: {x: 5, y: 2}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 6, y: 2}
       isWall: 0
       hasBall: 0
       hasCoin: 0
-    - coord: {x: 7, y: 2}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 2}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 2}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
     - coord: {x: 0, y: 3}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 1, y: 3}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 2, y: 3}
@@ -158,27 +122,15 @@ MonoBehaviour:
       hasBall: 0
       hasCoin: 0
     - coord: {x: 5, y: 3}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 6, y: 3}
       isWall: 0
       hasBall: 0
       hasCoin: 0
-    - coord: {x: 7, y: 3}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 3}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 3}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
     - coord: {x: 0, y: 4}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 1, y: 4}
@@ -205,18 +157,6 @@ MonoBehaviour:
       isWall: 0
       hasBall: 0
       hasCoin: 0
-    - coord: {x: 7, y: 4}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 4}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 4}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
     - coord: {x: 0, y: 5}
       isWall: 0
       hasBall: 0
@@ -238,22 +178,10 @@ MonoBehaviour:
       hasBall: 0
       hasCoin: 0
     - coord: {x: 5, y: 5}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 6, y: 5}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 7, y: 5}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 5}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 5}
       isWall: 0
       hasBall: 0
       hasCoin: 0
@@ -266,7 +194,7 @@ MonoBehaviour:
       hasBall: 0
       hasCoin: 0
     - coord: {x: 2, y: 6}
-      isWall: 0
+      isWall: 1
       hasBall: 0
       hasCoin: 0
     - coord: {x: 3, y: 6}
@@ -282,138 +210,6 @@ MonoBehaviour:
       hasBall: 0
       hasCoin: 0
     - coord: {x: 6, y: 6}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 7, y: 6}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 6}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 6}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 0, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 1, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 2, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 3, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 4, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 5, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 6, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 7, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 7}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 0, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 1, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 2, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 3, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 4, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 5, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 6, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 7, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 8}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 0, y: 9}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 1, y: 9}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 2, y: 9}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 3, y: 9}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 4, y: 9}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 5, y: 9}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 6, y: 9}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 7, y: 9}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 8, y: 9}
-      isWall: 0
-      hasBall: 0
-      hasCoin: 0
-    - coord: {x: 9, y: 9}
       isWall: 0
       hasBall: 0
       hasCoin: 0
