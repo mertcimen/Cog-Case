@@ -31,6 +31,8 @@ namespace _Main.Scripts.GridSystem
 
 		private Color targetColor;
 
+		
+		
 		public void Initialize(CellData cellData, GridManager owner)
 		{
 			gridManager = owner;
