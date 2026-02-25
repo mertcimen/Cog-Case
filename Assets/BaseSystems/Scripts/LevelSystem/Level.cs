@@ -10,6 +10,12 @@ namespace BaseSystems.Scripts.LevelSystem
 
 		private GridLevelAsset currentAsset;
 
+		[SerializeField] private Transform topBorder;
+		[SerializeField] private Transform downBorder;
+		[SerializeField] private Transform leftBorder;
+		[SerializeField] private Transform rightBorder;
+		
+		
 		public void Load(GridLevelAsset asset)
 		{
 			currentAsset = asset;
@@ -22,6 +28,7 @@ namespace BaseSystems.Scripts.LevelSystem
 			}
 
 			gridManager.Initialize(this, currentAsset);
+			gridManager.PositionBorders(topBorder, downBorder, leftBorder, rightBorder, 0.5f);
 		}
 
 		public virtual void Play()

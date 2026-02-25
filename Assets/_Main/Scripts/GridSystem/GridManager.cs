@@ -116,6 +116,38 @@ namespace _Main.Scripts.GridSystem
 			InputController.Instance.SetInputEnabled(true);
 		}
 
+		public void PositionBorders(Transform top, Transform down, Transform left, Transform right, float offset = 0.5f)
+		{
+			if (gridRoot == null) return;
+
+			// Grid local-space bounds (gridRoot local)
+			float halfW = (gridWidth - 1) * 0.5f * cellSize;
+			float halfH = (gridHeight - 1) * 0.5f * cellSize;
+
+			// Center in local space is (0,0,0) by design.
+			Vector3 centerLocal = Vector3.zero;
+
+			// Helper: keep border's current Y (height), move only X/Z in grid plane.
+			void SetBorder(Transform t, float xLocal, float zLocal)
+			{
+				if (t == null) return;
+
+				Vector3 world = gridRoot.TransformPoint(new Vector3(xLocal, 0f, zLocal));
+				Vector3 p = t.position;
+				p.x = world.x;
+				p.z = world.z;
+				t.position = p;
+			}
+
+			// Right / Left: Z = center, X = edge +/- offset
+			SetBorder(right, +halfW + offset, centerLocal.z);
+			SetBorder(left, -halfW - offset, centerLocal.z);
+
+			// Top / Down: X = center, Z = edge +/- offset
+			SetBorder(top, centerLocal.x, +halfH + offset);
+			SetBorder(down, centerLocal.x, -halfH - offset);
+		}
+
 		private void RebuildActiveBalls()
 		{
 			activeBalls.Clear();

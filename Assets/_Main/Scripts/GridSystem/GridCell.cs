@@ -4,6 +4,7 @@ using _Main.Scripts.LevelEditor;
 using _Main.Scripts.Pooling;
 using _Main.Scripts.WallSystem;
 using BaseSystems.CurrencySystem.Scripts;
+using BaseSystems.Scripts.Utilities;
 using DG.Tweening;
 using UnityEngine;
 
@@ -88,7 +89,15 @@ namespace _Main.Scripts.GridSystem
 			if (isPainted) return;
 
 			isPainted = true;
+			var particle = ParticlePooler.Instance.Spawn(ParticleType.Smoke, transform.position, Quaternion.identity);
 
+			if (particle != null)
+			{
+				var main = particle.main;
+				main.startColor = targetColor;
+			}
+
+			particle.Play();
 			if (paintSprite != null)
 			{
 				paintSprite.enabled = true;

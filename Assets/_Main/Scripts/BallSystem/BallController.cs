@@ -1,4 +1,5 @@
 using _Main.Scripts.GridSystem;
+using DG.Tweening;
 using UnityEngine;
 
 namespace _Main.Scripts.BallSystem
@@ -12,7 +13,8 @@ namespace _Main.Scripts.BallSystem
 
 		public BallMovementController MovementController => movementController;
 		public BallRotateController BallRotateController => ballRotateController;
-
+		
+		private Tween bounceTween;
 		public void Initialize(GridCell cell)
 		{
 			if (movementController == null)
@@ -53,5 +55,14 @@ namespace _Main.Scripts.BallSystem
 			CurrentCell = targetCell;
 			transform.position = targetCell.transform.position;
 		}
+
+		public void HitBounceEffect()
+		{
+			
+			// bounceTween = transform 
+			
+			
+		}
+		
 	}
 }
