@@ -31,8 +31,6 @@ namespace _Main.Scripts.GridSystem
 
 		private Color targetColor;
 
-		
-		
 		public void Initialize(CellData cellData, GridManager owner)
 		{
 			gridManager = owner;
@@ -44,11 +42,9 @@ namespace _Main.Scripts.GridSystem
 			if (paintSprite != null)
 				paintSprite.enabled = false;
 
-			// Önce temizle (pool reuse)
 			ClearContentToPool();
 
-			// İçerik spawn kuralları:
-			// Wall varsa ball/coin yok
+			
 			if (IsWall)
 			{
 				SpawnWall();
@@ -134,7 +130,7 @@ namespace _Main.Scripts.GridSystem
 		// GridCell pool reset
 		public void OnSpawned()
 		{
-			//
+			gameObject.SetActive(true);
 		}
 
 		public void OnDespawned()
@@ -145,6 +141,8 @@ namespace _Main.Scripts.GridSystem
 
 			if (paintSprite != null)
 				paintSprite.enabled = false;
+
+			paintSprite.color = Color.clear;
 
 			ClearContentToPool();
 		}

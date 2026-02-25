@@ -16,7 +16,7 @@ namespace _Main.Scripts.LevelEditor
 		// State explosion limit
 		private const int MaxStatesToExplore = 120000;
 
-		private GridLevelAsset _asset;
+		private LevelDataSO dataSO;
 		private EditMode _mode = EditMode.WallPaint;
 
 		// Drag paint
@@ -77,31 +77,31 @@ namespace _Main.Scripts.LevelEditor
 		{
 			DrawTopBar();
 
-			if (_asset == null)
+			if (dataSO == null)
 			{
 				EditorGUILayout.HelpBox("Bir GridLevelAsset seçin ya da oluşturun.", MessageType.Info);
 				return;
 			}
 
-			if (_asset.grid == null)
-				_asset.grid = new GridData();
+			if (dataSO.grid == null)
+				dataSO.grid = new GridData();
 
-			_asset.grid.EnsureGridStorage();
-
-			EditorGUILayout.Space(8);
-			DrawLevelMeta(_asset);
+			dataSO.grid.EnsureGridStorage();
 
 			EditorGUILayout.Space(8);
-			DrawGridSettings(_asset);
+			DrawLevelMeta(dataSO);
+
+			EditorGUILayout.Space(8);
+			DrawGridSettings(dataSO);
 
 			EditorGUILayout.Space(8);
 			DrawModeToolbar();
 
 			EditorGUILayout.Space(8);
-			DrawWinSimulationPanel(_asset.grid);
+			DrawWinSimulationPanel(dataSO.grid);
 
 			EditorGUILayout.Space(8);
-			DrawGrid(_asset.grid);
+			DrawGrid(dataSO.grid);
 		}
 
 		private void DrawTopBar()
@@ -109,7 +109,7 @@ namespace _Main.Scripts.LevelEditor
 			EditorGUILayout.BeginVertical("box");
 
 			EditorGUI.BeginChangeCheck();
-			_asset = (GridLevelAsset)EditorGUILayout.ObjectField("Level Asset", _asset, typeof(GridLevelAsset), false);
+			dataSO = (LevelDataSO)EditorGUILayout.ObjectField("Level Asset", dataSO, typeof(LevelDataSO), false);
 			if (EditorGUI.EndChangeCheck())
 			{
 				ResetDragState();
@@ -124,10 +124,10 @@ namespace _Main.Scripts.LevelEditor
 
 			GUILayout.FlexibleSpace();
 
-			if (_asset != null && GUILayout.Button("Ping Asset", GUILayout.Height(22), GUILayout.Width(120)))
+			if (dataSO != null && GUILayout.Button("Ping Asset", GUILayout.Height(22), GUILayout.Width(120)))
 			{
-				EditorGUIUtility.PingObject(_asset);
-				Selection.activeObject = _asset;
+				EditorGUIUtility.PingObject(dataSO);
+				Selection.activeObject = dataSO;
 			}
 
 			EditorGUILayout.EndHorizontal();
@@ -142,32 +142,32 @@ namespace _Main.Scripts.LevelEditor
 			if (string.IsNullOrEmpty(path))
 				return;
 
-			var asset = ScriptableObject.CreateInstance<GridLevelAsset>();
+			var asset = ScriptableObject.CreateInstance<LevelDataSO>();
 			asset.grid = new GridData();
 			asset.grid.EnsureGridStorage();
 
 			AssetDatabase.CreateAsset(asset, path);
 			AssetDatabase.SaveAssets();
 
-			_asset = asset;
-			EditorUtility.SetDirty(_asset);
+			dataSO = asset;
+			EditorUtility.SetDirty(dataSO);
 
 			_hasWinAnalysis = false;
 			Repaint();
 		}
 
-		private void DrawLevelMeta(GridLevelAsset asset)
+		private void DrawLevelMeta(LevelDataSO dataSO)
 		{
 			EditorGUILayout.BeginVertical("box");
 			EditorGUILayout.LabelField("Level", EditorStyles.boldLabel);
 
 			// Level Time
 			EditorGUI.BeginChangeCheck();
-			int newTime = EditorGUILayout.IntField("Level Time", asset.levelTime);
+			int newTime = EditorGUILayout.IntField("Level Time", dataSO.levelTime);
 			if (EditorGUI.EndChangeCheck())
 			{
-				Undo.RecordObject(asset, "Edit Level Time");
-				asset.levelTime = Mathf.Max(0, newTime);
+				Undo.RecordObject(dataSO, "Edit Level Time");
+				dataSO.levelTime = Mathf.Max(0, newTime);
 				MarkDirty();
 				_hasWinAnalysis = false;
 				Repaint();
@@ -175,11 +175,11 @@ namespace _Main.Scripts.LevelEditor
 
 			// Paint Color (ALWAYS visible)
 			EditorGUI.BeginChangeCheck();
-			var newPaintColorType = (ColorType)EditorGUILayout.EnumPopup("Paint Color", asset.levelPaintColor);
+			var newPaintColorType = (ColorType)EditorGUILayout.EnumPopup("Paint Color", dataSO.levelPaintColor);
 			if (EditorGUI.EndChangeCheck())
 			{
-				Undo.RecordObject(asset, "Edit Paint Color");
-				asset.levelPaintColor = newPaintColorType;
+				Undo.RecordObject(dataSO, "Edit Paint Color");
+				dataSO.levelPaintColor = newPaintColorType;
 				MarkDirty();
 				_hasWinAnalysis = false;
 				Repaint();
@@ -188,9 +188,9 @@ namespace _Main.Scripts.LevelEditor
 			EditorGUILayout.EndVertical();
 		}
 
-		private void DrawGridSettings(GridLevelAsset asset)
+		private void DrawGridSettings(LevelDataSO dataSO)
 		{
-			var grid = asset.grid;
+			var grid = dataSO.grid;
 
 			EditorGUILayout.BeginVertical("box");
 			EditorGUILayout.LabelField("Grid Settings", EditorStyles.boldLabel);
@@ -203,7 +203,7 @@ namespace _Main.Scripts.LevelEditor
 
 			if (EditorGUI.EndChangeCheck())
 			{
-				Undo.RecordObject(asset, "Edit Grid Size");
+				Undo.RecordObject(dataSO, "Edit Grid Size");
 
 				grid.gridSize = newSize;
 				grid.EnsureGridStorage();
@@ -722,7 +722,7 @@ namespace _Main.Scripts.LevelEditor
 				if (e.type == EventType.MouseDown && e.button == 0)
 				{
 					e.Use();
-					Undo.RecordObject(_asset, "Toggle Ball");
+					Undo.RecordObject(dataSO, "Toggle Ball");
 					grid.ToggleBall(c);
 					MarkDirty();
 					_hasWinAnalysis = false;
@@ -734,7 +734,7 @@ namespace _Main.Scripts.LevelEditor
 				if (e.type == EventType.MouseDown && e.button == 0)
 				{
 					e.Use();
-					Undo.RecordObject(_asset, "Toggle Coin");
+					Undo.RecordObject(dataSO, "Toggle Coin");
 					grid.ToggleCoin(c);
 					MarkDirty();
 					_hasWinAnalysis = false;
@@ -745,7 +745,7 @@ namespace _Main.Scripts.LevelEditor
 
 		private void BeginWallDrag(GridData grid, Vector2Int firstCell)
 		{
-			Undo.RecordObject(_asset, "Paint Walls");
+			Undo.RecordObject(dataSO, "Paint Walls");
 
 			_isDragging = true;
 			_lastPaintedCell = new Vector2Int(int.MinValue, int.MinValue);
@@ -788,8 +788,8 @@ namespace _Main.Scripts.LevelEditor
 
 		private void MarkDirty()
 		{
-			if (_asset == null) return;
-			EditorUtility.SetDirty(_asset);
+			if (dataSO == null) return;
+			EditorUtility.SetDirty(dataSO);
 		}
 	}
 }

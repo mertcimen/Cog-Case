@@ -25,7 +25,7 @@ namespace BaseSystems.Scripts.UI
 		private long rewardMoney;
 		
 		private bool isWobbling = true;
-		[SerializeField] private NextFeatureController nextFeatureController;
+		// [SerializeField] private NextFeatureController nextFeatureController;
 
 
 		private void Awake()
@@ -117,11 +117,9 @@ namespace BaseSystems.Scripts.UI
 		private void SetWinSecondStage()
 		{
 			btnContinue.interactable = true;
-			nextFeatureController.InitializeFeatureUI();
 			winSecondStage.SetActive(true);
 			winSecondStage.GetComponent<CanvasGroup>().DOFade(1f, 0.5f).SetDelay(GameSettingsSO.Instance.WinPanelShowDelay).onComplete = () =>
 			{
-				nextFeatureController.PlayProgressAnimation();
 			};
 		}
 

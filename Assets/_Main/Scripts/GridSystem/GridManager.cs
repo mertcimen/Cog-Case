@@ -9,6 +9,7 @@ using _Main.Scripts.LevelEditor;
 using _Main.Scripts.Pooling;
 using BaseSystems.Scripts.LevelSystem;
 using BaseSystems.Scripts.Managers;
+using BaseSystems.Scripts.Utilities;
 using UnityEngine;
 
 namespace _Main.Scripts.GridSystem
@@ -22,10 +23,10 @@ namespace _Main.Scripts.GridSystem
 		private Transform gridRoot;
 
 		private ColorType levelTargetColorForPaint;
-		
+
 		private Color targetColor;
 		public Color TargetColor => targetColor;
-		
+
 		private readonly Dictionary<Vector2Int, GridCell> cellsByCoord = new Dictionary<Vector2Int, GridCell>();
 
 		private readonly List<BallController> activeBalls = new List<BallController>(32);
@@ -38,10 +39,10 @@ namespace _Main.Scripts.GridSystem
 		private int gridWidth;
 		private int gridHeight;
 
-		
 		public int GridWidth => gridWidth;
 		public int GridHeight => gridHeight;
 		public float CellSize => cellSize;
+
 		private void OnEnable()
 		{
 			if (InputController.Instance != null)
@@ -54,7 +55,7 @@ namespace _Main.Scripts.GridSystem
 				InputController.Instance.OnSwipe -= HandleSwipe;
 		}
 
-		public void Initialize(Level level, GridLevelAsset levelData)
+		public void Initialize(Level level, LevelDataSO levelData)
 		{
 			currentLevel = level;
 
@@ -268,11 +269,29 @@ namespace _Main.Scripts.GridSystem
 			if (paintedGridCount >= paintableGridCount && paintableGridCount > 0)
 			{
 				InputController.Instance.SetInputEnabled(false);
+
 				StartCoroutine(Delay());
 
 				IEnumerator Delay()
 				{
-					yield return new WaitForSeconds(2f);
+					yield return new WaitUntil(() => activeBalls.All(x => x.MovementController.IsMoving == false));
+
+					for (var i = 0; i < activeBalls.Count; i++)
+					{
+						activeBalls[i].gameObject.SetActive(false);
+						var particle = ParticlePooler.Instance.Spawn(ParticleType.Smoke,
+							activeBalls[i].transform.position, Quaternion.identity);
+						if (particle != null)
+						{
+							var main = particle.main;
+							main.startColor = targetColor;
+							particle.Play();
+						}
+
+						yield return new WaitForSeconds(0.7f);
+					}
+
+					yield return new WaitForSeconds(1f);
 
 					LevelManager.Instance.Win();
 				}

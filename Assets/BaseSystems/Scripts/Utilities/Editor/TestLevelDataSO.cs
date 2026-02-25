@@ -11,12 +11,12 @@ namespace BaseSystems.Scripts.Utilities.Editor
 	/// New system: LevelsSO holds GridLevelAsset list, LevelManager spawns a single Level prefab at runtime.
 	/// </summary>
 	[InitializeOnLoad]
-	public static class TestGridLevelAsset
+	public static class TestLevelDataSO
 	{
 		private static string[] dropdown;
 		private static int framesToWaitUntilPlayMode;
 
-		static TestGridLevelAsset()
+		static TestLevelDataSO()
 		{
 			EditorApplication.playModeStateChanged += ModeChanged;
 		}

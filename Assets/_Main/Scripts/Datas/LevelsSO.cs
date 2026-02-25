@@ -10,9 +10,9 @@ namespace _Main.Scripts.Data
     [CreateAssetMenu(fileName = "Levels", menuName = "Data/Levels")]
     public class LevelsSO : ScriptableObject
     {
-        [SerializeField] private List<GridLevelAsset> levels = new();
+        [SerializeField] private List<LevelDataSO> levels = new();
 
-        public List<GridLevelAsset> Levels
+        public List<LevelDataSO> Levels
         {
             get => levels;
             set => levels = value;
@@ -20,7 +20,7 @@ namespace _Main.Scripts.Data
 
         public int Count => levels?.Count ?? 0;
 
-        public GridLevelAsset Get(int index)
+        public LevelDataSO Get(int index)
         {
             if (levels == null || levels.Count == 0) return null;
             if (index < 0 || index >= levels.Count) return null;
@@ -38,11 +38,6 @@ namespace _Main.Scripts.Data
             get => level;
             set => level = value;
         }
-
-        public bool IsLoopingLevel
-        {
-            get => isLoopingLevel;
-            set => isLoopingLevel = value;
-        }
+        
     }
 }

@@ -83,8 +83,8 @@ namespace BaseSystems.Scripts.Managers
 				return;
 			}
 
-			GridLevelAsset asset = levelsSO.Get(index);
-			if (asset == null)
+			LevelDataSO dataSO = levelsSO.Get(index);
+			if (dataSO == null)
 			{
 				Debug.LogError($"GridLevelAsset missing at index: {index}");
 				return;
@@ -102,7 +102,7 @@ namespace BaseSystems.Scripts.Managers
 			}
 
 			CurrentLevel = Instantiate(prefabToSpawn);
-			CurrentLevel.Load(asset);
+			CurrentLevel.Load(dataSO);
 
 			OnLevelLoad?.Invoke();
 

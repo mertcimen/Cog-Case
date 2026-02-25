@@ -6,7 +6,7 @@ using UnityEngine;
 namespace _Main.Scripts.LevelEditor
 {
 	[CreateAssetMenu(menuName = "Level/Grid Level Asset", fileName = "GridLevelAsset")]
-	public class GridLevelAsset : ScriptableObject
+	public class LevelDataSO : ScriptableObject
 	{
 		public int levelTime = 60;
 		public ColorType levelPaintColor;
@@ -18,11 +18,8 @@ namespace _Main.Scripts.LevelEditor
 	{
 		public Vector2Int gridSize = new Vector2Int(10, 10);
 
-		// Tüm hücreler coordinate bazlı tutulur.
 		public List<CellData> cells = new List<CellData>();
 
-		// Editor/runtime kullanımını hızlandırmak için cache.
-		// Serialize edilmez.
 		[NonSerialized] private Dictionary<Vector2Int, int> _indexByCoord;
 
 		public int CellCount => Mathf.Max(0, gridSize.x * gridSize.y);
@@ -47,12 +44,12 @@ namespace _Main.Scripts.LevelEditor
 			if (cells == null)
 				cells = new List<CellData>(CellCount);
 
-			// Var olan hücreleri coord’a göre map’le
+			// Mapping Cells by Coordinate
 			var old = new Dictionary<Vector2Int, CellData>(cells.Count);
 			for (int i = 0; i < cells.Count; i++)
 				old[cells[i].coord] = cells[i];
 
-			// Yeni listeyi gridSize’a göre tekrar oluştur (overlap olanları koru)
+			// Overlap Safe when grid size Changed
 			var newCells = new List<CellData>(CellCount);
 			foreach (var c in AllCoordinates())
 			{
@@ -124,7 +121,6 @@ namespace _Main.Scripts.LevelEditor
 			}
 			else
 			{
-				// nadir: cache bozulmuşsa
 				cells.Add(cell);
 				RebuildCache();
 			}
@@ -144,7 +140,7 @@ namespace _Main.Scripts.LevelEditor
 			if (isWall)
 			{
 				cell.hasBall = false;
-				cell.hasCoin = false; // NEW
+				cell.hasCoin = false; 
 			}
 
 			SetCell(cell);
