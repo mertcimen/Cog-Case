@@ -22,8 +22,10 @@ namespace _Main.Scripts.GridSystem
 		private Transform gridRoot;
 
 		private ColorType levelTargetColorForPaint;
+		
 		private Color targetColor;
 		public Color TargetColor => targetColor;
+		
 		private readonly Dictionary<Vector2Int, GridCell> cellsByCoord = new Dictionary<Vector2Int, GridCell>();
 
 		private readonly List<BallController> activeBalls = new List<BallController>(32);
@@ -36,6 +38,10 @@ namespace _Main.Scripts.GridSystem
 		private int gridWidth;
 		private int gridHeight;
 
+		
+		public int GridWidth => gridWidth;
+		public int GridHeight => gridHeight;
+		public float CellSize => cellSize;
 		private void OnEnable()
 		{
 			if (InputController.Instance != null)
