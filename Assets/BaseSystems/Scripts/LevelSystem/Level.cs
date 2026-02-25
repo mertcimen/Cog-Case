@@ -1,5 +1,6 @@
 using _Main.Scripts.GridSystem;
 using _Main.Scripts.LevelEditor;
+using BaseSystems.Scripts.Utilities;
 using UnityEngine;
 
 namespace BaseSystems.Scripts.LevelSystem
@@ -14,8 +15,7 @@ namespace BaseSystems.Scripts.LevelSystem
 		[SerializeField] private Transform downBorder;
 		[SerializeField] private Transform leftBorder;
 		[SerializeField] private Transform rightBorder;
-		
-		
+
 		public void Load(GridLevelAsset asset)
 		{
 			currentAsset = asset;
@@ -29,6 +29,12 @@ namespace BaseSystems.Scripts.LevelSystem
 
 			gridManager.Initialize(this, currentAsset);
 			gridManager.PositionBorders(topBorder, downBorder, leftBorder, rightBorder, 0.5f);
+			// Camera frame 
+			if (CameraController.Instance != null)
+			{
+				CameraController.Instance.FrameGrid(gridManager.GridWidth, gridManager.GridHeight, gridManager.CellSize,
+					paddingWorld: 0.5f, edgePaddingPercent: 0.08f);
+			}
 		}
 
 		public virtual void Play()
@@ -37,8 +43,6 @@ namespace BaseSystems.Scripts.LevelSystem
 
 		public virtual void Unload()
 		{
-			// GridManager zaten OnDestroy ile despawn ediyor
-			// ama destroy öncesi temiz istersen direkt çağırabilirsin:
 			if (gridManager != null)
 				gridManager.DespawnAllToPool();
 		}
