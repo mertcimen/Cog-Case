@@ -129,7 +129,6 @@ namespace _Main.Scripts.InputSystem
 
 			bool horizontal = Mathf.Abs(delta.x) >= Mathf.Abs(delta.y);
 
-			// Eğer axis lock istiyorsan: sadece bu step için uygula
 			if (lockAxisAfterFirstStep)
 			{
 				if (!_axisLocked)
@@ -141,7 +140,6 @@ namespace _Main.Scripts.InputSystem
 				horizontal = _lockedHorizontal;
 			}
 
-			// Seçilen axis üzerinde yeterli mesafe var mı?
 			float axisDistance = horizontal ? Mathf.Abs(delta.x) : Mathf.Abs(delta.y);
 			if (axisDistance < continuousStepDistance)
 				return;
@@ -155,10 +153,8 @@ namespace _Main.Scripts.InputSystem
 
 			OnSwipe?.Invoke(dir);
 
-			// ✅ KRİTİK: event sonrası başlangıcı “son dokunduğum nokta” yap
 			_lastStepOrigin = currentPos;
 
-			// ✅ KRİTİK: axis kilidini de resetle ki eventten sonra yön değiştirebilsin
 			_axisLocked = false;
 		}
 
