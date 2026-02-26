@@ -43,3 +43,6 @@ To ensure the grid area and environment appear visually as a single unified obje
 Time Spent on the Project
 
 Approximately 12–15 hours were spent on this project.
+
+AI Note 
+I only used ChatGPT as an AI chatbot, particularly while developing the level editor part. However, I did not use any AI agent.
