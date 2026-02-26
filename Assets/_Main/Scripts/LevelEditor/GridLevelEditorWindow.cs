@@ -67,7 +67,7 @@ namespace _Main.Scripts.LevelEditor
 			}
 		}
 
-		[MenuItem("--/Level Editor/Grid Level Editor")]
+		[MenuItem("Level Editor/Grid Level Editor")]
 		public static void Open()
 		{
 			GetWindow<GridLevelEditorWindow>("Grid Level Editor");
