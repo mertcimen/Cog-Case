@@ -79,7 +79,7 @@ namespace _Main.Scripts.LevelEditor
 
 			if (dataSO == null)
 			{
-				EditorGUILayout.HelpBox("Bir GridLevelAsset seçin ya da oluşturun.", MessageType.Info);
+				EditorGUILayout.HelpBox("Select a LevelData or Create.", MessageType.Info);
 				return;
 			}
 
@@ -137,7 +137,7 @@ namespace _Main.Scripts.LevelEditor
 		private void CreateNewAsset()
 		{
 			string path = EditorUtility.SaveFilePanelInProject("Create Grid Level Asset", "GridLevelAsset", "asset",
-				"Yeni level asset için isim seçin.");
+				"Chose a name for new level asset.");
 
 			if (string.IsNullOrEmpty(path))
 				return;
@@ -233,10 +233,10 @@ namespace _Main.Scripts.LevelEditor
 			EditorGUILayout.HelpBox(
 				_mode == EditMode.WallPaint
 					?
-					"Wall Paint: Sol tık basılı tutup sürükleyerek duvar ekle/sil. İlk tıklama ekleme mi silme mi olacağını belirler."
+					"Wall Paint: Click and hold the left mouse button to drag and add/remove walls.\nThe first click determines whether the action will be adding or removing."
 					: _mode == EditMode.BallPlace
-						? "Ball Place: Hücreye tıklayınca top ekler/siler. Duvar üstüne top konulamaz."
-						: "Coin Place: Hücreye tıklayınca coin ekler/siler. Duvar veya top olan hücreye coin konulamaz.",
+						? "Ball Place: Click the call for Add or remove ball."
+						: "Coin Place: Click the cell for add a coin or remove.",
 				MessageType.Info);
 
 			EditorGUILayout.EndVertical();
@@ -252,8 +252,8 @@ namespace _Main.Scripts.LevelEditor
 			EditorGUILayout.LabelField("Simulation (Paint All)", EditorStyles.boldLabel);
 
 			EditorGUILayout.HelpBox(
-				"Amaç: Duvar olmayan tüm hücrelerin üzerinden en az bir kez top geçirmek.\n" +
-				"Bu buton, swipe kombinasyonlarını BFS ile gezerek level kazanılabilir mi kontrol eder.",
+				"Objective: Pass the ball over all non-wall cells at least once.\n" +
+				"This button checks whether the level is winnable by traversing swipe combinations using BFS.",
 				MessageType.Info);
 
 			EditorGUILayout.BeginHorizontal();
@@ -288,7 +288,7 @@ namespace _Main.Scripts.LevelEditor
 				if (_winResult.hitLimit)
 				{
 					EditorGUILayout.HelpBox(
-						$"State limiti aşıldı (>{MaxStatesToExplore}). 'NOT WINNABLE' sonucu bu durumda kesin olmayabilir.",
+						$" (>{MaxStatesToExplore}). 'NOT WINNABLE'",
 						MessageType.Warning);
 				}
 			}
