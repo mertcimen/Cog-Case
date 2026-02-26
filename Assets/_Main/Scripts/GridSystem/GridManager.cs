@@ -7,6 +7,7 @@ using _Main.Scripts.Datas;
 using _Main.Scripts.InputSystem;
 using _Main.Scripts.LevelEditor;
 using _Main.Scripts.Pooling;
+using BaseSystems.AudioSystem.Scripts;
 using BaseSystems.Scripts.LevelSystem;
 using BaseSystems.Scripts.Managers;
 using BaseSystems.Scripts.Utilities;
@@ -285,6 +286,7 @@ namespace _Main.Scripts.GridSystem
 							particle.Play();
 						}
 
+						AudioManager.Instance.PlayAudio(AudioName.Plop1).SetPitch(i+i*0.5f);
 						yield return new WaitForSeconds(0.2f);
 					}
 

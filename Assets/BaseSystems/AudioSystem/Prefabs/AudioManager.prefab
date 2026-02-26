@@ -53,9 +53,9 @@ MonoBehaviour:
     Audios:
       _serializedList:
       - Key: 0
-        Value: {fileID: 8300000, guid: b2287d43b25904692b52a6b59313bd63, type: 3}
+        Value: {fileID: 8300000, guid: cec2732eb7ef94d81a2e55c7ba2fc6e5, type: 3}
       - Key: 1
-        Value: {fileID: 8300000, guid: d2d20cf3cbff648228be378454d274a1, type: 3}
+        Value: {fileID: 8300000, guid: 15a925d7c29564d379cf62cc21bc03d0, type: 3}
       - Key: 5
         Value: {fileID: 8300000, guid: 374cd4a97e44943a69c371d2c505d9be, type: 3}
       - Key: 6
